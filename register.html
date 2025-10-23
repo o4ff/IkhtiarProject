@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>إنشاء حساب</title>
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <link rel="stylesheet" href="assets/css/util.css" />
+</head>
+<body data-theme="dark">
+  <!-- Nav (partial) -->
+  <div data-include="partials/nav"></div>
+
+  <main class="container narrow" role="main">
+    <!-- Back button -->
+    <nav class="subnav" aria-label="Secondary">
+      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
+        ← <span data-i18n="ui.back">رجوع</span>
+      </button>
+    </nav>
+
+    <h1 data-i18n="auth.registerTitle">إنشاء حساب</h1>
+
+    <form id="registerForm" class="form card" novalidate>
+      <label>
+        <span data-i18n="auth.name">الاسم الكامل</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label>
+        <span data-i18n="auth.email">البريد الإلكتروني</span>
+        <input type="email" name="email" required autocomplete="username" />
+      </label>
+      <label>
+        <span data-i18n="auth.password">كلمة المرور</span>
+        <input type="password" name="password" required autocomplete="new-password" minlength="6" />
+      </label>
+
+      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn primary" type="submit" data-i18n="auth.create">إنشاء</button>
+      </div>
+
+      <p id="registerErr" class="tiny" style="color:var(--err);display:none"></p>
+      <p class="muted">
+        <span data-i18n="auth.haveAccount">لديك حساب؟</span>
+        <a href="login.html" data-i18n="auth.loginLink">تسجيل الدخول</a>
+      </p>
+    </form>
+  </main>
+
+  <!-- Footer (partial) -->
+  <div data-include="partials/footer"></div>
+
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Inline validation helper for clearer feedback in demo
+    (function(){
+      const form = document.getElementById('registerForm');
+      const err = document.getElementById('registerErr');
+      form && form.addEventListener('submit', (e)=>{
+        err.style.display='none';
+        const f=new FormData(form);
+        const pw=(f.get('password')||'');
+        if(pw && pw.length<6){
+          e.preventDefault();
+          err.textContent='الحد الأدنى لطول كلمة المرور 6 أحرف.';
+          err.style.display='block';
+          window.Toast && Toast.show('كلمة المرور قصيرة 🔒', 'error', 2000);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

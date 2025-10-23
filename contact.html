@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تواصل معنا</title>
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <link rel="stylesheet" href="assets/css/util.css" />
+</head>
+<body data-theme="dark">
+  <div data-include="partials/nav"></div>
+
+  <main class="container narrow" role="main">
+    <nav class="subnav" aria-label="Secondary">
+      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
+        ← <span data-i18n="ui.back">رجوع</span>
+      </button>
+    </nav>
+
+    <header>
+      <h1 data-i18n="contact.title">تواصل معنا</h1>
+      <p class="muted tiny" data-i18n="contact.helper">نرد عادة خلال 24 ساعة.</p>
+    </header>
+
+    <form id="contactForm" class="form card" novalidate>
+      <label>
+        <span data-i18n="contact.name">الاسم</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label>
+        <span data-i18n="contact.email">البريد الإلكتروني</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>
+        <span data-i18n="contact.msg">الرسالة</span>
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn primary" type="submit" data-i18n="contact.send">إرسال</button>
+      </div>
+      <p id="contactErr" class="tiny" style="color:var(--err);display:none"></p>
+      <p id="contactOk" class="tiny" style="color:var(--ok);display:none"></p>
+    </form>
+  </main>
+
+  <div data-include="partials/footer"></div>
+
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    // مبدّل رسائل بسيط للاتصال (اختياري)
+    (function(){
+      const form = document.getElementById('contactForm');
+      const err = document.getElementById('contactErr');
+      const ok = document.getElementById('contactOk');
+      form && form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        err.style.display='none'; ok.style.display='none';
+        const fd = new FormData(form);
+        const name = (fd.get('name')||'').trim();
+        const email = (fd.get('email')||'').trim();
+        const msg = (fd.get('message')||'').trim();
+        if(!name || !email || !msg){
+          err.textContent='الرجاء تعبئة جميع الحقول.';
+          err.style.display='block';
+          window.Toast && Toast.show('أكمل الحقول المطلوبة ❗','error',2000);
+          return;
+        }
+        ok.textContent='تم استلام رسالتك، بنتواصل معك قريباً.';
+        ok.style.display='block';
+        window.Toast && Toast.show('تم إرسال الرسالة ✉️','success',2000);
+        form.reset();
+      });
+    })();
+  </script>
+</body>
+</html>

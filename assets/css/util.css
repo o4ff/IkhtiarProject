@@ -1,0 +1,15 @@
+.hidden{display:none!important}
+.center{text-align:center}
+.muted{color:var(--muted)}
+.tiny{font-size:12px}
+.bullet{padding-left:18px}
+
+/* Pills and badges helpers */
+.pill{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(122,60,255,.1);
+  border:1px solid var(--border);
+  color:var(--text);
+}
