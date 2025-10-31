@@ -23,7 +23,7 @@ const I18N = {
       'auth.loginSuccess':'تم تسجيل الدخول بنجاح','auth.loginFail':'فشل تسجيل الدخول',
 
       // Survey
-      'survey.title':'استبيان التخصص','survey.section1':'البيانات الأكاديمية','survey.gpa':'المعدل التقريبي GPA','survey.strengths':'مواد مفضلة/قوة','survey.section2':'الاهتمامات والميول','survey.interests':'مجالات تهمك','survey.style':'أسلوب التعلم','survey.style.visual':'مرئي','survey.style.auditory':'سمعي','survey.style.kin':'عملي','survey.section3':'الأهداف المهنية','survey.goals':'أهدافك','survey.submit':'احصل على التوصيات','survey.helper':'أجب بصدق لتحصل على أفضل مواءمة ✨',
+      'survey.title':'استبيان التخصص','survey.section1':'البيانات الأكاديمية','survey.gpa':'المعدل التقريبي GPA','survey.strengths':'المواد المفضلة','survey.section2':'الاهتمامات والميول','survey.interests':'مجالات تهمك','survey.style':'أسلوب التعلم','survey.style.visual':'مرئي','survey.style.auditory':'سمعي','survey.style.kin':'عملي','survey.section3':'الأهداف المهنية','survey.goals':'أهدافك','survey.submit':'احصل على التوصيات','survey.helper':'أجب بصدق لتحصل على أفضل مواءمة ✨',
 
       // Recs + Dashboard
       'recs.title':'توصياتك','recs.market':'رؤى سوق العمل','recs.marketNote':'نقطة تكامل مستقبلية مع LinkedIn / Bayt API.',
@@ -37,7 +37,7 @@ const I18N = {
       'how.title':'كيف نعمل؟','how.s1t':'استبيان تفاعلي','how.s1d':'نحلّل إجاباتك بذكاء لنرسم لك المسار الأنسب.','how.s2t':'تطابق ديناميكي','how.s2d':'نقيّم الملائمة عبر نقاط متعددة ونبني ترتيباً واضحاً.','how.s3t':'خطة تعلم','how.s3d':'نقترح مهارات ودورات وشهادات لرفع فرصك.',
       'testi.title':'قالوا عنا','testi.t1':'ساعدني أفهم الفرق بين علوم الحاسب وتقنية المعلومات وبدأت مساري بثقة.','testi.t2':'الواجهة بسيطة والتوصيات منطقية, الله يعطيكم العافية.','testi.t3':'لوحة التقدم تخلي المتابعة ممتعة.',
       'faq.title':'الأسئلة الشائعة','faq.q1':'هل التوصيات نهائية؟','faq.a1':'هي نقطة بداية قابلة للتخصيص حسب أهدافك وتقدمك.','faq.q2':'هل المنصة تدعم اللغة العربية والانجليزية بالكامل؟','faq.a2':'نعم، يدعم RTL وواجهة ثنائية اللغة مع تبديل فوري.','faq.q3':'هل البيانات آمنة؟','faq.a3':'نلتزم بتخزين آمن وتشفير عند الربط الخلفي.',
-      'plans.title':'باقات الاستخدام','plans.free':'مجاني','plans.std':'قياسي','plans.pro':'احترافي','plans.f1':'استبيان أساسي','plans.f2':'3 توصيات','plans.s1':'توصيات غير محدودة','plans.s2':'مسارات تعلم موسعة','plans.p1':'رؤى سوق متقدمة','plans.p2':'تصدير PDF','plans.start':'ابدأ','plans.choose':'اختر','plans.contact':'تواصل',
+      'plans.title':'باقات الاستخدام','plans.free':'مجاني','plans.std':'قياسي','plans.pro':'احترافي','plans.f1':'استبيان أساسي','plans.f2':'3 توصيات','plans.s1':'توصيات غير محدودة','plans.s2':'مسارات تعلم موسعة','plans.p1':'رؤى سوق متقدمة','plans.p2':'تصدير PDF','plans.start':'ابدأ','plans.choose':'اختر','plans.contact':'تواصل','plans.free_price':'0 ر.س','plans.std_price':'99 ر.س / شهر','plans.pro_price':'199 ر.س / شهر',
 
       // UI
       'ui.back':'رجوع'
@@ -78,7 +78,7 @@ const I18N = {
       'how.title':'How it works','how.s1t':'Interactive survey','how.s1d':'We intelligently analyze your answers to chart the most suitable course for you.','how.s2t':'Dynamic matching','how.s2d':'We score multi-factors to build a clear ranking.','how.s3t':'Learning plan','how.s3d':'We suggest skills, courses and certificates to boost outcomes.',
       'testi.title':'Testimonials','testi.t1':'Helped me see CS vs IT clearly and start with confidence.','testi.t2':'Simple UI and sensible recommendations,Thx.','testi.t3':'Progress hub makes tracking enjoyable.',
       'faq.title':'FAQ','faq.q1':'Are recommendations final?','faq.a1':'They are a starting point customizable to your goals.','faq.q2':'Is Arabic and Engliesh language fully supported?','faq.a2':'Yes, full RTL with instant language toggle.','faq.q3':'Is my data safe?','faq.a3':'We commit to secure storage and encryption upon backend integration.',
-      'plans.title':'Plans','plans.free':'Free','plans.std':'Standard','plans.pro':'Pro','plans.f1':'Basic survey','plans.f2':'3 recommendations','plans.s1':'Unlimited recommendations','plans.s2':'Extended learning paths','plans.p1':'Advanced market insights','plans.p2':'Export to PDF','plans.start':'Start','plans.choose':'Choose','plans.contact':'Contact',
+      'plans.title':'Plans','plans.free':'Free','plans.std':'Standard','plans.pro':'Pro','plans.f1':'Basic survey','plans.f2':'3 recommendations','plans.s1':'Unlimited recommendations','plans.s2':'Extended learning paths','plans.p1':'Advanced market insights','plans.p2':'Export to PDF','plans.start':'Start','plans.choose':'Choose','plans.contact':'Contact','plans.free_price':'$0','plans.std_price':'$99 / month','plans.pro_price':'$199 / month',
 
       // UI
       'ui.back':'Back'
