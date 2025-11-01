@@ -2,7 +2,9 @@
 .center{text-align:center}
 .muted{color:var(--muted)}
 .tiny{font-size:12px}
-.bullet{padding-left:18px}
+
+/* Bulleted lists with logical padding for RTL/LTR */
+.bullet{padding-inline-start:18px}
 
 /* Pills and badges helpers */
 .pill{
@@ -12,4 +14,17 @@
   background:rgba(122,60,255,.1);
   border:1px solid var(--border);
   color:var(--text);
+}
+@media (hover:hover){
+  .pill:hover{background:rgba(122,60,255,.16)}
+}
+/* Better contrast in light theme */
+[data-theme="light"] .pill{background:rgba(106,53,239,.08)}
+
+/* Accessibility utility */
+.visually-hidden{
+  position:absolute!important;
+  width:1px!important; height:1px!important;
+  padding:0!important; margin:-1px!important; overflow:hidden!important;
+  clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important;
 }
