@@ -26,9 +26,6 @@
           <a class="btn primary" href="login.html" data-i18n="nav.login">دخول</a>
         </div>
       </header>`;
-
-  
-
   });
   document.querySelectorAll('[data-include="partials/footer"]').forEach(el=>{
     el.outerHTML = `
@@ -110,6 +107,7 @@
     e.preventDefault();
     const f = new FormData(loginForm);
     try{
+      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
       const ok = await Auth.login(f.get('email'), f.get('password'));
       if(ok){
         Toast.show('تم تسجيل الدخول بنجاح ✅', 'success', 2400);
@@ -120,7 +118,8 @@
         err.textContent = 'تعذر تسجيل الدخول، تأكد من البيانات.';
         Toast.show('فشل تسجيل الدخول ❌', 'error', 2000);
       }
-    }catch{
+    }catch(ex){
+      console.error(ex);
       Toast.show('حدث خطأ غير متوقع ❌', 'error', 2000);
     }
   });
@@ -129,6 +128,7 @@
   registerForm && registerForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const f = new FormData(registerForm);
+    if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
     const ok = await Auth.register(f.get('name'), f.get('email'), f.get('password'));
     if(ok){
       Toast.show('تم إنشاء الحساب ✨', 'success', 2000);
@@ -144,41 +144,92 @@
   const surveyForm = document.getElementById('surveyForm');
   surveyForm && surveyForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
+    if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
     const f = new FormData(surveyForm);
     const payload = {
       gpa: Number(f.get('gpa')||0),
-      strengths: (f.get('strengths')||'').split(',').map(s=>s.trim()).filter(Boolean),
-      interests: (f.get('interests')||'').split(',').map(s=>s.trim()).filter(Boolean),
+      strengths: DataService._normList(f.get('strengths')),
+      interests: DataService._normList(f.get('interests')),
       style: f.get('style')||'visual',
-      goals: (f.get('goals')||'')
+      goals: String(f.get('goals')||'').trim()
     };
-    localStorage.setItem('ikhtiar_profile', JSON.stringify(payload));
-    await DataService.generateRecommendations(payload);
-    Toast.show('تم حفظ إجاباتك ✅', 'success', 1600);
+
+    // 1) حفظ الإجابات في Supabase
+    const u = await Auth.currentUser();
+    if(!u){ Toast.show('الرجاء تسجيل الدخول أولاً', 'error', 2200); return; }
+
+    const { error: e1 } = await supa.from('survey_answers').insert({
+      user_id: u.id,
+      gpa: payload.gpa,
+      strengths: payload.strengths,
+      interests: payload.interests,
+      style: payload.style,
+      goals: payload.goals
+    });
+    if(e1){ console.error(e1); Toast.show('تعذّر حفظ الاستبيان', 'error', 2200); return; }
+
+    // 2) توليد التوصيات محلياً الآن (يمكن نقلها للخادم لاحقاً)
+    const recs = await DataService.generateRecommendations(payload);
+
+    // 3) حفظ snapshot للتوصيات
+    const { error: e2 } = await supa.from('recommendations').insert({
+      user_id: u.id,
+      source_version: 1,
+      payload: recs
+    });
+    if(e2){ console.error(e2); Toast.show('تم الحفظ محلياً لكن تعذّر حفظ التوصيات', 'warn', 2200); }
+
     window.location.href = 'recommendations.html';
   });
 
   // Recommendations page
   if(location.pathname.endsWith('recommendations.html')){
     (async ()=>{
+      const u = await Auth.currentUser();
+      if(!u){ location.href='login.html'; return; }
+      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
+
       const wrap = document.getElementById('recsList');
-      const recs = await DataService.getRecommendations();
-      if(recs && wrap){
-        wrap.innerHTML = '';
-        recs.forEach(r=>{
-          const el = document.createElement('article');
-          el.className='card';
-          el.innerHTML = `
-            <div class="badge">⭐ ${r.score}% match</div>
-            <h3>${r.major} <span aria-hidden="true">🎓</span></h3>
-            <p class="muted">${r.reason}</p>
-            <ul class="bullet">
-              <li>Suggested skills: ${r.skills.join(', ')}</li>
-              <li>Suggested courses: ${r.courses.join(', ')}</li>
-            </ul>`;
-          wrap.appendChild(el);
-        });
+      const { data, error } = await supa
+        .from('recommendations')
+        .select('payload, created_at')
+        .eq('user_id', u.id)
+        .order('created_at', { ascending:false })
+        .limit(1);
+
+      if(error){ console.error(error); wrap.innerHTML = '<p class="muted">تعذّر تحميل التوصيات.</p>'; return; }
+
+      const recs = Array.isArray(data?.[0]?.payload) ? data[0].payload : [];
+      if(!recs.length){
+        wrap.innerHTML = `<p class="muted">لا توجد توصيات بعد. ابدأ الاستبيان أولاً.</p>`;
+        return;
       }
+
+      wrap.innerHTML = '';
+      recs.forEach(r=>{
+        const skills  = Array.isArray(r.skills)  ? r.skills.join(', ')  : '-';
+        const courses = Array.isArray(r.courses) ? r.courses.join(', ') : '-';
+        const roles   = Array.isArray(r.roles)   ? r.roles.join(', ')   : '';
+        const companies = Array.isArray(r.companies) ? r.companies.join(', ') : '';
+        const extraRoles = roles ? `<li>Job titles: ${roles}</li>` : '';
+        const extraCompanies = companies ? `<li>Top companies: ${companies}</li>` : '';
+
+        const el = document.createElement('article');
+        el.className='card';
+        el.innerHTML = `
+          <div class="badge">⭐ ${r.score ?? '-'}% match</div>
+          <h3>${r.major ?? '-'} <span aria-hidden="true">🎓</span></h3>
+          <p class="muted">${r.reason ?? ''}</p>
+          <ul class="bullet">
+            <li>Suggested skills: ${skills}</li>
+            <li>Certs/Courses: ${courses}</li>
+            ${extraRoles}
+            ${extraCompanies}
+          </ul>`;
+        wrap.appendChild(el);
+      });
+
+      // marketInsights (محلي حالياً)
       const mi = document.getElementById('marketInsights');
       if(mi){
         const insights = await DataService.getMarketInsights();
@@ -195,44 +246,71 @@
 
   // Dashboard
   if(location.pathname.endsWith('dashboard.html')){
-    const box = document.getElementById('profileBox');
-    const latest = document.getElementById('latestRecs');
-    const profile = JSON.parse(localStorage.getItem('ikhtiar_profile')||'null');
-    if(box && profile){
-      box.innerHTML = `
-        <div class="card">
-          <p><strong>GPA:</strong> ${profile.gpa}</p>
-          <p><strong>Strengths:</strong> ${(profile.strengths||[]).join(', ')}</p>
-          <p><strong>Interests:</strong> ${(profile.interests||[]).join(', ')}</p>
-          <p><strong>Style:</strong> ${profile.style}</p>
-          <p><strong>Goals:</strong> ${profile.goals||'-'}</p>
-        </div>`;
-    }
-    DataService.getRecommendations().then(recs=>{
-      if(latest && recs){
-        latest.innerHTML = recs.slice(0,3).map(r=>`
+    (async ()=>{
+      const u = await Auth.currentUser();
+      if(!u){ location.href='login.html'; return; }
+      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
+
+      const box = document.getElementById('profileBox');
+      const { data: ans, error: eA } = await supa
+        .from('survey_answers')
+        .select('*')
+        .eq('user_id', u.id)
+        .order('created_at', { ascending:false })
+        .limit(1);
+
+      if(eA){ console.error(eA); }
+
+      if(box && ans && ans[0]){
+        const p = ans[0];
+        const strengths = Array.isArray(p.strengths) ? p.strengths.join(', ') : '-';
+        const interests = Array.isArray(p.interests) ? p.interests.join(', ') : '-';
+        box.innerHTML = `
           <div class="card">
-            <div class="badge">${r.score}%</div>
-            <h4>${r.major}</h4>
-            <p class="muted">${r.reason}</p>
+            <p><strong>GPA:</strong> ${p.gpa ?? '-'}</p>
+            <p><strong>Strengths:</strong> ${strengths}</p>
+            <p><strong>Interests:</strong> ${interests}</p>
+            <p><strong>Style:</strong> ${p.style || '-'}</p>
+            <p><strong>Goals:</strong> ${p.goals || '-'}</p>
+          </div>`;
+      }
+
+      const latest = document.getElementById('latestRecs');
+      const { data: recRows, error: eR } = await supa
+        .from('recommendations')
+        .select('payload, created_at')
+        .eq('user_id', u.id)
+        .order('created_at', { ascending:false })
+        .limit(1);
+
+      if(eR){ console.error(eR); }
+
+      if(latest && recRows && recRows[0]){
+        const payload = Array.isArray(recRows[0].payload) ? recRows[0].payload : [];
+        const recs = payload.slice(0,3);
+        latest.innerHTML = recs.map(r=>`
+          <div class="card">
+            <div class="badge">${r.score ?? '-'}%</div>
+            <h4>${r.major ?? '-'}</h4>
+            <p class="muted">${r.reason ?? ''}</p>
           </div>
         `).join('');
       }
-    });
 
-    // Welcome/info toasts (optional)
-    Toast.show('Welcome back 👋', 'info', 1800);
+      Toast.show('Welcome back 👋', 'info', 1600);
+    })();
   }
 
   // Survey progress indicator
   if(document.getElementById('surveyForm')){
-    const bar=document.getElementById('surveyProgress');
-    const inputs=[...document.querySelectorAll('#surveyForm input, #surveyForm select, #surveyForm textarea')];
-    const update=()=>{ const filled=inputs.filter(i=>i.value&&i.value.length>0).length; const pct=Math.min(100, Math.round((filled/inputs.length)*100)); bar && (bar.style.width=pct+'%'); };
-    inputs.forEach(i=>i.addEventListener('input',update)); update();
+    const bar = document.getElementById('surveyProgress');
+    const inputs = [...document.querySelectorAll('#surveyForm input, #surveyForm select, #surveyForm textarea')];
+    const update = ()=>{
+      const filled = inputs.filter(i=>i.value && i.value.length>0).length;
+      const pct = Math.min(100, Math.round((filled/inputs.length)*100));
+      if(bar) bar.style.width = pct + '%';
+    };
+    inputs.forEach(i=>i.addEventListener('input', update));
+    update();
   }
-
 })();
-
-
-
