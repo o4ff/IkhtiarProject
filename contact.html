@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="assets/css/util.css" />
 </head>
 <body data-theme="dark">
+
+  <!-- Nav (injected by app.js) -->
   <div data-include="partials/nav"></div>
 
   <main class="container narrow" role="main">
@@ -36,71 +38,127 @@
         <textarea name="message" rows="5" required></textarea>
       </label>
       <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn primary" type="submit" data-i18n="contact.send">إرسال</button>
+        <button id="contactSubmit" class="btn primary" type="submit" data-i18n="contact.send">إرسال</button>
       </div>
       <p id="contactErr" class="tiny" style="color:var(--err);display:none"></p>
       <p id="contactOk" class="tiny" style="color:var(--ok);display:none"></p>
     </form>
   </main>
 
-  <!-- بيانات التواصل - بطاقات الفريق -->
-<section class="container narrow" style="margin-top:24px">
-  <h2 data-i18n="contact.team" style="margin-bottom:16px;">فريق الدعم</h2>
-  <div class="grid-3" style="gap:16px;">
-    <div class="card" style="padding:16px; text-align:center;">
-      <h3 data-i18n="contact.member1"></h3>
-      <a href="mailto:202301632@stu.jazanu.edu.sa">202301632@stu.jazanu.edu.sa</a>
+  <!-- فريق الدعم -->
+  <section class="container narrow" style="margin-top:24px">
+    <h2 data-i18n="contact.team" style="margin-bottom:16px;">فريق الدعم</h2>
+    <div class="grid-3" style="gap:16px;">
+      <div class="card" style="padding:16px; text-align:center;">
+        <h3 data-i18n="contact.member1">عبدالمجيد الحازمي</h3>
+        <a href="mailto:202301632@stu.jazanu.edu.sa">202301632@stu.jazanu.edu.sa</a>
+      </div>
+      <div class="card" style="padding:16px; text-align:center;">
+        <h3 data-i18n="contact.member2">سعود كليبي</h3>
+        <a href="mailto:202204587@stu.jazanu.edu.sa">202204587@stu.jazanu.edu.sa</a>
+      </div>
+      <div class="card" style="padding:16px; text-align:center;">
+        <h3 data-i18n="contact.member3">علي زنقوطي</h3>
+        <a href="mailto:202200887@stu.jazanu.edu.sa">202200887@stu.jazanu.edu.sa</a>
+      </div>
+      <div class="card" style="padding:16px; text-align:center;">
+        <h3 data-i18n="contact.member4">علي آل عقيل</h3>
+        <a href="mailto:202300020@stu.jazanu.edu.sa">202300020@stu.jazanu.edu.sa</a>
+      </div>
+      <div class="card" style="padding:16px; text-align:center;">
+        <h3 data-i18n="contact.member5">مهند عتيني</h3>
+        <a href="mailto:202102233@stu.jazanu.edu.sa">202102233@stu.jazanu.edu.sa</a>
+      </div>
     </div>
-    <div class="card" style="padding:16px; text-align:center;">
-      <h3 data-i18n="contact.member2"></h3>
-      <a href="mailto:202204587@stu.jazanu.edu.sa">202204587@stu.jazanu.edu.sa</a>
-    </div>
-    <div class="card" style="padding:16px; text-align:center;">
-      <h3 data-i18n="contact.member3"></h3>
-      <a href="mailto:202200887@stu.jazanu.edu.sa">202200887@stu.jazanu.edu.sa</a>
-    </div>
-    <div class="card" style="padding:16px; text-align:center;">
-      <h3 data-i18n="contact.member4"></h3>
-      <a href="mailto:202300020@stu.jazanu.edu.sa">202300020@stu.jazanu.edu.sa</a>
-    </div>
-    <div class="card" style="padding:16px; text-align:center;">
-      <h3 data-i18n="contact.member5"></h3>
-      <a href="mailto:202200145@stu.jazanu.edu.sa">202200145@stu.jazanu.edu.sa</a>
-    </div>
-  </div>
-</section>
+  </section>
 
-
-
+  <!-- Footer (injected by app.js) -->
   <div data-include="partials/footer"></div>
 
+  <!-- Scripts order -->
   <script src="assets/js/i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supa.js"></script>
+  <script src="assets/js/dataService.js"></script>
+  <script src="assets/js/auth.js"></script>
   <script src="assets/js/app.js"></script>
+
+  <!-- Contact submit -->
   <script>
-    // مبدّل رسائل بسيط للاتصال (اختياري)
-    (function(){
+  (function(){
+    document.addEventListener('DOMContentLoaded', ()=>{
       const form = document.getElementById('contactForm');
-      const err = document.getElementById('contactErr');
-      const ok = document.getElementById('contactOk');
-      form && form.addEventListener('submit', (e)=>{
+      const err  = document.getElementById('contactErr');
+      const ok   = document.getElementById('contactOk');
+      const btn  = document.getElementById('contactSubmit');
+      if(!form) return;
+
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      async function submitToDb({name,email,msg}){
+        if(!window.supa) { return { ok:false, message:'خدمة Supabase غير مهيأة.' }; }
+        try{
+          const { error } = await supa.from('contact_messages').insert({ name, email, message: msg });
+          if(error) return { ok:false, message: error.message || 'تعذّر إرسال الرسالة حالياً.' };
+          return { ok:true };
+        }catch(ex){
+          console.error(ex);
+          return { ok:false, message:'خطأ غير متوقع أثناء الإرسال.' };
+        }
+      }
+
+      function throttleOk(){
+        const now = Date.now();
+        const last = Number(localStorage.getItem('contact_last_ts') || 0);
+        if(now - last < 30_000) return false; // 30s
+        localStorage.setItem('contact_last_ts', String(now));
+        return true;
+      }
+
+      form.addEventListener('submit', async (e)=>{
         e.preventDefault();
         err.style.display='none'; ok.style.display='none';
+        if(btn) btn.disabled = true;
+
         const fd = new FormData(form);
-        const name = (fd.get('name')||'').trim();
+        const name  = (fd.get('name')||'').trim();
         const email = (fd.get('email')||'').trim();
-        const msg = (fd.get('message')||'').trim();
+        const msg   = (fd.get('message')||'').trim();
+
         if(!name || !email || !msg){
-          err.textContent='الرجاء تعبئة جميع الحقول.';
+          err.textContent = 'الرجاء تعبئة جميع الحقول.';
           err.style.display='block';
-          window.Toast && Toast.show('أكمل الحقول المطلوبة ❗','error',2000);
+          if(btn) btn.disabled = false;
           return;
         }
-        ok.textContent='تم استلام رسالتك، بنتواصل معك قريباً.';
+        if(!emailRe.test(email)){
+          err.textContent = 'صيغة البريد غير صحيحة.';
+          err.style.display='block';
+          if(btn) btn.disabled = false;
+          return;
+        }
+        if(!throttleOk()){
+          err.textContent = 'الرجاء الانتظار قبل الإرسال مرة أخرى.';
+          err.style.display='block';
+          if(btn) btn.disabled = false;
+          return;
+        }
+
+        const res = await submitToDb({ name, email, msg });
+        if(!res.ok){
+          err.textContent = res.message || 'تعذّر إرسال الرسالة حالياً.';
+          err.style.display='block';
+          if(btn) btn.disabled = false;
+          return;
+        }
+
+        ok.textContent='تم استلام رسالتك، سنعاودك قريباً.';
         ok.style.display='block';
-        window.Toast && Toast.show('تم إرسال الرسالة ✉️','success',2000);
         form.reset();
+        if(btn) btn.disabled = false;
       });
-    })();
+    });
+  })();
   </script>
 </body>
 </html>
