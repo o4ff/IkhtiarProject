@@ -69,7 +69,7 @@ body{
 .hero h1{font-size:36px; margin:0 0 10px}
 .hero .muted{margin:0 0 16px}
 .key-points{margin:16px 0 0; padding-left:18px}
-.hero-art img{width:100%; filter:var(--shadow)}
+.hero-art img{width:100%}
 
 /* Sections decorators */
 .section-title{display:flex; align-items:center; gap:8px}
@@ -102,3 +102,25 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--brand-200); bord
   .grid-2{grid-template-columns:1fr}
   .hero{grid-template-columns:1fr}
 }
+
+/* Minor polish */
+.hero-art img{width:100%; filter: drop-shadow(0 10px 30px rgba(0,0,0,.35));}
+
+.section-title .dot{box-shadow:0 0 0 3px rgba(122,60,255,.15);}
+
+@media (prefers-color-scheme: light){
+  :root{ color-scheme: light; }
+}
+
+/* Plans price text uses theme color for contrast */
+[data-theme="light"] .card p[data-i18n^="plans."][style]{ color: var(--text) !important; }
+
+/* Better outline in RTL contexts */
+html[dir="rtl"] :focus-visible{ outline-offset: 3px; }
+
+/* Button hover accessibility tweak */
+.btn.outline:hover{ background: rgba(255,255,255,.04); }
+.btn.ghost:hover{ background: rgba(255,255,255,.03); }
+
+/* Improve inputs placeholder visibility */
+::placeholder{ color: var(--muted); opacity:.9; }
