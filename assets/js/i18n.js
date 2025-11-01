@@ -1,6 +1,6 @@
 // Lightweight i18n with AR/EN and RTL/LTR switch
 const I18N = {
-  lang: localStorage.getItem('lang') || 'ar',
+  lang: (localStorage.getItem('lang') || 'ar').toLowerCase(),
   dict: {
     ar: {
       // Nav + footer
@@ -26,7 +26,7 @@ const I18N = {
       'survey.title':'استبيان التخصص','survey.section1':'البيانات الأكاديمية','survey.gpa':'المعدل التقريبي GPA','survey.strengths':'المواد المفضلة','survey.section2':'الاهتمامات والميول','survey.interests':'مجالات تهمك','survey.style':'أسلوب التعلم','survey.style.visual':'مرئي','survey.style.auditory':'سمعي','survey.style.kin':'عملي','survey.section3':'الأهداف المهنية','survey.goals':'أهدافك','survey.submit':'احصل على التوصيات','survey.helper':'أجب بصدق لتحصل على أفضل مواءمة ✨',
 
       // Recs + Dashboard
-      'recs.title':'توصياتك','recs.market':'رؤى سوق العمل','recs.marketNote':'نقطة تكامل مستقبلية مع LinkedIn / Bayt API.',
+      'recs.title':'توصياتك','recs.market':'رؤى سوق العمل','recs.marketNote':'نقطة تكامل مستقبلية مع منصات التوظيف لعرض الاتجاهات والمهارات المطلوبة لكل مسار.',
       'dash.title':'مرحباً بك','dash.profile':'ملفي','dash.update':'تحديث الاستبيان','dash.latest':'آخر التوصيات','dash.viewAll':'عرض الكل',
 
       // Contact + Privacy
@@ -49,58 +49,99 @@ const I18N = {
       'footer.tag':'Guiding you to better choices.','footer.links':'Links','footer.privacy':'Privacy','footer.about':'About','footer.contact':'Contact','footer.start':'Get started','footer.register':'Register','footer.login':'Login','footer.survey':'Survey',
 
       // Hero + features + CTA
-      'hero.title':'Your choice starts here','hero.subtitle':'An Ikhtiar platform that helps you choose your major And suggesting courses that are compatible with your specialization to prepare you for the job market.','hero.ctaStart':'Start survey','hero.ctaLearn':'Learn more','hero.p1':'Personalized recommendations by your skills and interests','hero.p2':'Suggest professional certifications and job titles for your specialization','hero.p3':'Full Arabic/English support with a friendly UI',
-      'features.title':'Why Ikhtiar?','features.f1t':'Smart Path','features.f1d':'An advanced recommendation system that confidently guides you towards your academic and professional future.','features.f2t':'Progress hub','features.f2d':'Track progress, update profile and give feedback to improve accuracy.','features.f3t':'Future-Proof Architecture','features.f3d':'Modular design enabling smooth integration with external systems and APIs.',
-      'ctaBand.title':'Start your journey','ctaBand.text':'Answer a few short questions to get personalized recommendations based on your data and interests.','ctaBand.cta':'Start now',
+      'hero.title':'Your choice starts here',
+      'hero.subtitle':'Ikhtiar helps you choose your major and suggests courses aligned with it to prepare you for the job market.',
+      'hero.ctaStart':'Start survey','hero.ctaLearn':'Learn more',
+      'hero.p1':'Personalized recommendations by your skills and interests',
+      'hero.p2':'Suggested professional certifications and job titles for your path',
+      'hero.p3':'Full Arabic/English support with a friendly UI',
+      'features.title':'Why Ikhtiar?','features.f1t':'Smart guide',
+      'features.f1d':'An advanced recommendation system that confidently guides your academic and career choices.',
+      'features.f2t':'Progress hub','features.f2d':'Track progress, update your profile, and give feedback to improve accuracy over time.',
+      'features.f3t':'Future-proof architecture','features.f3d':'Modular design enabling smooth integration with external systems and data sources.',
 
       // About
-      'about.title':'About','about.1':'Ikhtiar helps students make informed major choices using AI and a structured questionnaire.','about.2':'It offers job-market insights, hiring organizations, and required skills per path.','about.goals':'Goals','about.g1':'Personalized course & major recommendations','about.g2':'Learning tailored to you','about.g3':'Connect your skills to the job market','about.scope':'Scope','about.scopeText':'Scalable Project, user data analysis, ML integration and interactive dashboards.',
+      'about.title':'About','about.1':'Ikhtiar helps students make informed major choices using AI and a structured questionnaire.',
+      'about.2':'It offers job-market insights, hiring organizations, and required skills per path.',
+      'about.goals':'Goals','about.g1':'Personalized course & major recommendations','about.g2':'Learning tailored to you','about.g3':'Connect your skills to the job market',
+      'about.scope':'Scope','about.scopeText':'Scalable design, user data analysis, ML integration, and interactive dashboards.',
 
       // Services
-      'services.title':'Services','services.s1t':'Major recommendations','services.s1d':'Ranked list of suitable majors based on your profile.','services.s2t':'Market insights','services.s2d':'skills, Job titles, and organizations hiring for your major.','services.s3t':'Learning paths','services.s3d':'Suggested courses and certificates from Coursera, edX and Udemy.',
+      'services.title':'Services','services.s1t':'Major recommendations','services.s1d':'Ranked list of suitable majors based on your profile.',
+      'services.s2t':'Market insights','services.s2d':'Skills, job titles, and organizations hiring for your major.',
+      'services.s3t':'Learning paths','services.s3d':'Suggested courses and certificates from Coursera, edX, and Udemy.',
 
       // Auth
-      'auth.loginTitle':'Sign in','auth.email':'Email','auth.password':'Password','auth.login':'Login','auth.noAccount':"Don't have an account?",'auth.registerLink':'Create one','auth.registerTitle':'Create account','auth.name':'Full name','auth.create':'Create','auth.haveAccount':'Already have an account?','auth.loginLink':'Sign in',
+      'auth.loginTitle':'Sign in','auth.email':'Email','auth.password':'Password','auth.login':'Login',
+      'auth.noAccount':"Don't have an account?",'auth.registerLink':'Create one',
+      'auth.registerTitle':'Create account','auth.name':'Full name','auth.create':'Create',
+      'auth.haveAccount':'Already have an account?','auth.loginLink':'Sign in',
       'auth.loginSuccess':'Logged in successfully','auth.loginFail':'Login failed',
 
       // Survey
-      'survey.title':'Major survey','survey.section1':'Academic data','survey.gpa':'Approx. GPA','survey.strengths':'Favorite/strong subjects','survey.section2':'Interests & style','survey.interests':'Fields you like','survey.style':'Learning style','survey.style.visual':'Visual','survey.style.auditory':'Auditory','survey.style.kin':'Hands-on','survey.section3':'Career goals','survey.goals':'Your goals','survey.submit':'Get recommendations','survey.helper':'Answer honestly to get the best match ✨',
+      'survey.title':'Major survey','survey.section1':'Academic data','survey.gpa':'Approx. GPA',
+      'survey.strengths':'Favorite/strong subjects','survey.section2':'Interests & style',
+      'survey.interests':'Fields you like','survey.style':'Learning style',
+      'survey.style.visual':'Visual','survey.style.auditory':'Auditory','survey.style.kin':'Hands-on',
+      'survey.section3':'Career goals','survey.goals':'Your goals','survey.submit':'Get recommendations',
+      'survey.helper':'Answer honestly to get the best match ✨',
 
       // Recs + Dashboard
-      'recs.title':'Your recommendations','recs.market':'Labor-market insights','recs.marketNote':'Future integration point with LinkedIn / Bayt API.',
+      'recs.title':'Your recommendations','recs.market':'Labor-market insights',
+      'recs.marketNote':'Future integration with hiring platforms to show trends and in-demand skills per track.',
       'dash.title':'Welcome','dash.profile':'My profile','dash.update':'Update survey','dash.latest':'Latest recommendations','dash.viewAll':'View all',
 
       // Contact + Privacy
-      'contact.title':'Contact us','contact.name':'Name','contact.email':'Email','contact.msg':'Message','contact.send':'Send','contact.helper':'We typically reply within 24 hours.','contact.team':'Support Team','contact.team':'Support Team','contact.member1':'Abdulmajeed Alhazmi','contact.member2':'Saud Kulaiby','contact.member3':'Ali Zanqoti','contact.member4':'Ali AL Agail','contact.member5':'Mohanad Atini',
-      'privacy.title':'Privacy policy','privacy.1':'We protect your data following best practices and regulatory requirements.','privacy.p1':'Survey data is used for recommendations only','privacy.p2':'Export/Delete your data from dashboard','privacy.p3':'Secure at-rest/in-transit encryption (when backend is connected)',
+      'contact.title':'Contact us','contact.name':'Name','contact.email':'Email','contact.msg':'Message','contact.send':'Send',
+      'contact.helper':'We typically reply within 24 hours.','contact.team':'Support Team',
+      'contact.member1':'Abdulmajeed Alhazmi','contact.member2':'Saud Kulaybi','contact.member3':'Ali Zanqoti','contact.member4':'Ali Al Aghail','contact.member5':'Mohanad Atini',
+      'privacy.title':'Privacy policy','privacy.1':'We protect your data following best practices and regulatory requirements.',
+      'privacy.p1':'Survey data is used for recommendations only','privacy.p2':'Export/Delete your data from dashboard',
+      'privacy.p3':'Secure at-rest/in-transit encryption (when backend is connected)',
 
       // How/Testimonials/FAQ/Plans
-      'how.title':'How it works','how.s1t':'Interactive survey','how.s1d':'We intelligently analyze your answers to chart the most suitable course for you.','how.s2t':'Dynamic matching','how.s2d':'We score multi-factors to build a clear ranking.','how.s3t':'Learning plan','how.s3d':'We suggest skills, courses and certificates to boost outcomes.',
-      'testi.title':'Testimonials','testi.t1':'Helped me see CS vs IT clearly and start with confidence.','testi.t2':'Simple UI and sensible recommendations,Thx.','testi.t3':'Progress hub makes tracking enjoyable.',
-      'faq.title':'FAQ','faq.q1':'Are recommendations final?','faq.a1':'They are a starting point customizable to your goals.','faq.q2':'Is Arabic and Engliesh language fully supported?','faq.a2':'Yes, full RTL with instant language toggle.','faq.q3':'Is my data safe?','faq.a3':'We commit to secure storage and encryption upon backend integration.',
-      'plans.title':'Plans','plans.free':'Free','plans.std':'Standard','plans.pro':'Pro','plans.f1':'Basic survey','plans.f2':'3 recommendations','plans.s1':'Unlimited recommendations','plans.s2':'Extended learning paths','plans.p1':'Advanced market insights','plans.p2':'Export to PDF','plans.start':'Start','plans.choose':'Choose','plans.contact':'Contact','plans.free_price':'$0','plans.std_price':'$99 / month','plans.pro_price':'$199 / month',
+      'how.title':'How it works','how.s1t':'Interactive survey','how.s1d':'We intelligently analyze your answers to chart the most suitable path.',
+      'how.s2t':'Dynamic matching','how.s2d':'We score multiple factors to build a clear ranking.',
+      'how.s3t':'Learning plan','how.s3d':'We suggest skills, courses, and certificates to boost outcomes.',
+      'testi.title':'Testimonials','testi.t1':'Helped me see CS vs IT clearly and start with confidence.',
+      'testi.t2':'Simple UI and sensible recommendations. Thanks!','testi.t3':'The progress hub makes tracking enjoyable.',
+      'faq.title':'FAQ','faq.q1':'Are recommendations final?','faq.a1':'They are a starting point customizable to your goals.',
+      'faq.q2':'Is Arabic and English fully supported?','faq.a2':'Yes, full RTL with instant language toggle.',
+      'faq.q3':'Is my data safe?','faq.a3':'We commit to secure storage and encryption upon backend integration.',
+      'plans.title':'Plans','plans.free':'Free','plans.std':'Standard','plans.pro':'Pro',
+      'plans.f1':'Basic survey','plans.f2':'3 recommendations','plans.s1':'Unlimited recommendations',
+      'plans.s2':'Extended learning paths','plans.p1':'Advanced market insights','plans.p2':'Export to PDF',
+      'plans.start':'Start','plans.choose':'Choose','plans.contact':'Contact',
+      'plans.free_price':'$0','plans.std_price':'$99 / month','plans.pro_price':'$199 / month',
 
       // UI
       'ui.back':'Back'
     }
   },
 
-  apply(root=document){
-    const {lang}=I18N;
+  apply(root = document){
+    const lang = (I18N.lang || 'ar').toLowerCase();
+    const dict = I18N.dict && I18N.dict[lang] ? I18N.dict[lang] : (I18N.dict?.en || {});
     root.querySelectorAll('[data-i18n]').forEach(el=>{
-      const key=el.getAttribute('data-i18n');
-      if(I18N.dict[lang][key]) el.textContent = I18N.dict[lang][key];
+      const key = el.getAttribute('data-i18n');
+      const val = (dict && dict[key]) || (I18N.dict?.en && I18N.dict.en[key]);
+      if(typeof val === 'string') el.textContent = val;
     });
+
     const html = document.documentElement;
-    if(lang==='ar'){ html.setAttribute('lang','ar'); html.setAttribute('dir','rtl'); }
+    if(lang === 'ar'){ html.setAttribute('lang','ar'); html.setAttribute('dir','rtl'); }
     else { html.setAttribute('lang','en'); html.setAttribute('dir','ltr'); }
+
     const langBtn = document.getElementById('langToggle');
     if(langBtn) langBtn.textContent = lang.toUpperCase();
   },
 
   toggle(){
-    I18N.lang = I18N.lang==='ar'?'en':'ar';
+    I18N.lang = I18N.lang === 'ar' ? 'en' : 'ar';
     localStorage.setItem('lang', I18N.lang);
     I18N.apply();
   }
 };
+
+// expose globally
+window.I18N = I18N;
