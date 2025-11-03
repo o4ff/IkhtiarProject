@@ -26,7 +26,7 @@ const I18N = {
       'survey.title':'استبيان التخصص','survey.section1':'البيانات الأكاديمية','survey.gpa':'المعدل التقريبي GPA','survey.strengths':'المواد المفضلة','survey.section2':'الاهتمامات والميول','survey.interests':'مجالات تهمك','survey.style':'أسلوب التعلم','survey.style.visual':'مرئي','survey.style.auditory':'سمعي','survey.style.kin':'عملي','survey.section3':'الأهداف المهنية','survey.goals':'أهدافك','survey.submit':'احصل على التوصيات','survey.helper':'أجب بصدق لتحصل على أفضل مواءمة ✨',
 
       // Recs + Dashboard
-      'recs.title':'توصياتك','recs.market':'رؤى سوق العمل','recs.marketNote':'نقطة تكامل مستقبلية مع منصات التوظيف لعرض الاتجاهات والمهارات المطلوبة لكل مسار.',
+      'recs.title':'توصياتك','recs.market':'رؤى سوق العمل','recs.marketNote':' ',
       'dash.title':'مرحباً بك','dash.profile':'ملفي','dash.update':'تحديث الاستبيان','dash.latest':'آخر التوصيات','dash.viewAll':'عرض الكل',
 
       // Contact + Privacy
@@ -88,7 +88,7 @@ const I18N = {
 
       // Recs + Dashboard
       'recs.title':'Your recommendations','recs.market':'Labor-market insights',
-      'recs.marketNote':'Future integration with hiring platforms to show trends and in-demand skills per track.',
+      'recs.marketNote':'',
       'dash.title':'Welcome','dash.profile':'My profile','dash.update':'Update survey','dash.latest':'Latest recommendations','dash.viewAll':'View all',
 
       // Contact + Privacy
@@ -145,3 +145,4 @@ const I18N = {
 
 // expose globally
 window.I18N = I18N;
+
