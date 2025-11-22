@@ -1,84 +1,123 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>الاستبيان</title>
-  <link rel="stylesheet" href="assets/css/theme.css" />
-  <link rel="stylesheet" href="assets/css/util.css" />
-</head>
-<body data-theme="dark">
-  <!-- Nav (partial) -->
-  <div data-include="partials/nav"></div>
+// src/data/surveyQuestions.ts
+import { Question } from '../types';
 
-  <main class="container" role="main">
-    <!-- Progress and helper text -->
-    <div class="progress" aria-hidden="true" style="margin-bottom:10px">
-      <span id="surveyProgress" style="width:33%"></span>
-    </div>
-    <p class="tiny muted" data-i18n="survey.helper">أجب بصدق لتحصل على أفضل مواءمة ✨</p>
+export const surveyQuestions: Question[] = [
+  {
+    id: 'interests',
+    question: 'What subjects interest you the most?',
+    question_ar: 'ما هي المواد التي تهتم بها أكثر؟',
+    type: 'multiple',
+    options: [
+      { value: 'technology', label: 'Technology & Computers', label_ar: 'التكنولوجيا والحاسوب' },
+      { value: 'science', label: 'Science & Biology', label_ar: 'العلوم والأحياء' },
+      { value: 'mathematics', label: 'Mathematics', label_ar: 'الرياضيات' },
+      { value: 'arts', label: 'Arts & Design', label_ar: 'الفنون والتصميم' },
+      { value: 'business', label: 'Business & Economics', label_ar: 'الأعمال والاقتصاد' },
+      { value: 'helping_others', label: 'Helping Others', label_ar: 'مساعدة الآخرين' },
+      { value: 'languages', label: 'Languages & Communication', label_ar: 'اللغات والتواصل' },
+      { value: 'building', label: 'Building & Engineering', label_ar: 'البناء والهندسة' },
+    ],
+  },
+  {
+    id: 'skills',
+    question: 'Which of these skills do you excel at?',
+    question_ar: 'في أي من هذه المهارات تتفوق؟',
+    type: 'multiple',
+    options: [
+      { value: 'problem_solving', label: 'Problem Solving', label_ar: 'حل المشكلات' },
+      { value: 'creativity', label: 'Creativity', label_ar: 'الإبداع' },
+      { value: 'communication', label: 'Communication', label_ar: 'التواصل' },
+      { value: 'analytical', label: 'Analytical Thinking', label_ar: 'التفكير التحليلي' },
+      { value: 'leadership', label: 'Leadership', label_ar: 'القيادة' },
+      { value: 'attention_detail', label: 'Attention to Detail', label_ar: 'الاهتمام بالتفاصيل' },
+      { value: 'empathy', label: 'Empathy', label_ar: 'التعاطف' },
+      { value: 'technical', label: 'Technical Skills', label_ar: 'المهارات التقنية' },
+    ],
+  },
+  {
+    id: 'work_environment',
+    question: 'What type of work environment do you prefer?',
+    question_ar: 'ما نوع بيئة العمل التي تفضلها؟',
+    type: 'single',
+    options: [
+      { value: 'office', label: 'Office/Corporate Environment', label_ar: 'بيئة مكتبية/شركات' },
+      { value: 'lab', label: 'Laboratory/Research Setting', label_ar: 'معمل/بيئة بحثية' },
+      { value: 'field', label: 'Field Work/Outdoor', label_ar: 'عمل ميداني/خارجي' },
+      { value: 'creative_studio', label: 'Creative Studio', label_ar: 'استوديو إبداعي' },
+      { value: 'healthcare', label: 'Healthcare Facility', label_ar: 'منشأة رعاية صحية' },
+      { value: 'remote', label: 'Remote/Flexible', label_ar: 'عن بعد/مرن' },
+    ],
+  },
+  {
+    id: 'career_goals',
+    question: 'What are your primary career goals?',
+    question_ar: 'ما هي أهدافك المهنية الأساسية؟',
+    type: 'multiple',
+    options: [
+      { value: 'high_salary', label: 'High Salary Potential', label_ar: 'إمكانية راتب عالي' },
+      { value: 'help_society', label: 'Help Society', label_ar: 'مساعدة المجتمع' },
+      { value: 'innovation', label: 'Innovation & Research', label_ar: 'الابتكار والبحث' },
+      { value: 'entrepreneurship', label: 'Start Own Business', label_ar: 'بدء عمل خاص' },
+      { value: 'stability', label: 'Job Stability', label_ar: 'استقرار وظيفي' },
+      { value: 'creativity', label: 'Creative Expression', label_ar: 'التعبير الإبداعي' },
+      { value: 'leadership', label: 'Leadership Roles', label_ar: 'أدوار قيادية' },
+    ],
+  },
+  {
+    id: 'learning_style',
+    question: 'How do you prefer to learn?',
+    question_ar: 'كيف تفضل التعلم؟',
+    type: 'single',
+    options: [
+      { value: 'hands_on', label: 'Hands-on Practice', label_ar: 'الممارسة العملية' },
+      { value: 'theory', label: 'Theory & Concepts', label_ar: 'النظرية والمفاهيم' },
+      { value: 'visual', label: 'Visual Learning', label_ar: 'التعلم البصري' },
+      { value: 'group', label: 'Group Discussions', label_ar: 'مناقشات جماعية' },
+      { value: 'independent', label: 'Independent Study', label_ar: 'دراسة مستقلة' },
+    ],
+  },
+  {
+    id: 'strengths',
+    question: 'What do people say you are good at?',
+    question_ar: 'ما الذي يقول الناس إنك جيد فيه؟',
+    type: 'multiple',
+    options: [
+      { value: 'tech_savvy', label: 'Tech-Savvy', label_ar: 'الذكاء التقني' },
+      { value: 'artistic', label: 'Artistic Abilities', label_ar: 'القدرات الفنية' },
+      { value: 'logical', label: 'Logical Thinking', label_ar: 'التفكير المنطقي' },
+      { value: 'caring', label: 'Caring for Others', label_ar: 'الرعاية بالآخرين' },
+      { value: 'organizing', label: 'Organizing & Planning', label_ar: 'التنظيم والتخطيط' },
+      { value: 'persuasive', label: 'Persuasive Communication', label_ar: 'التواصل المقنع' },
+      { value: 'detail_oriented', label: 'Detail-Oriented', label_ar: 'موجه للتفاصيل' },
+    ],
+  },
+  {
+    id: 'work_with',
+    question: 'Who would you prefer to work with?',
+    question_ar: 'مع من تفضل العمل؟',
+    type: 'single',
+    options: [
+      { value: 'technology', label: 'Technology & Systems', label_ar: 'التكنولوجيا والأنظمة' },
+      { value: 'people', label: 'People & Communities', label_ar: 'الناس والمجتمعات' },
+      { value: 'data', label: 'Data & Numbers', label_ar: 'البيانات والأرقام' },
+      { value: 'creative_projects', label: 'Creative Projects', label_ar: 'مشاريع إبداعية' },
+      { value: 'research', label: 'Research & Experiments', label_ar: 'البحث والتجارب' },
+    ],
+  },
+  {
+    id: 'passion',
+    question: 'What are you most passionate about?',
+    question_ar: 'ما الذي أنت أكثر شغفاً به؟',
+    type: 'multiple',
+    options: [
+      { value: 'solving_problems', label: 'Solving Complex Problems', label_ar: 'حل المشاكل المعقدة' },
+      { value: 'creating_art', label: 'Creating Art/Design', label_ar: 'إنشاء فن/تصميم' },
+      { value: 'helping_heal', label: 'Helping People Heal', label_ar: 'مساعدة الناس على الشفاء' },
+      { value: 'building_things', label: 'Building Things', label_ar: 'بناء الأشياء' },
+      { value: 'business_growth', label: 'Business Growth', label_ar: 'نمو الأعمال' },
+      { value: 'teaching', label: 'Teaching Others', label_ar: 'تعليم الآخرين' },
+      { value: 'discovering', label: 'Discovering New Knowledge', label_ar: 'اكتشاف معرفة جديدة' },
+    ],
+  },
+];
 
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
-      </button>
-    </nav>
-
-    <h1 data-i18n="survey.title">استبيان التخصص</h1>
-
-    <form id="surveyForm" class="form card">
-      <fieldset>
-        <legend data-i18n="survey.section1">البيانات الأكاديمية</legend>
-        <label>
-          <span data-i18n="survey.gpa">المعدل التقريبي GPA</span>
-          <input type="number" step="0.01" min="0" max="5" name="gpa" required />
-        </label>
-        <label>
-          <span data-i18n="survey.strengths">المواد المفضلة</span>
-          <input type="text" name="strengths" placeholder="Math, Physics, CS..." />
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend data-i18n="survey.section2">الاهتمامات والميول</legend>
-        <label>
-          <span data-i18n="survey.interests">مجالات تهمك</span>
-          <input type="text" name="interests" placeholder="AI, Networks, Business..." />
-        </label>
-        <label>
-          <span data-i18n="survey.style">أسلوب التعلم</span>
-          <select name="style">
-            <option value="visual" data-i18n="survey.style.visual">مرئي</option>
-            <option value="auditory" data-i18n="survey.style.auditory">سمعي</option>
-            <option value="kinesthetic" data-i18n="survey.style.kin">عملي</option>
-          </select>
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend data-i18n="survey.section3">الأهداف المهنية</legend>
-        <label>
-          <span data-i18n="survey.goals">أهدافك</span>
-          <input type="text" name="goals" placeholder="Research, Industry, Startup..." />
-        </label>
-      </fieldset>
-
-      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn primary" type="submit" data-i18n="survey.submit">احصل على التوصيات</button>
-      </div>
-    </form>
-  </main>
-
-  <!-- Footer (partial) -->
-  <div data-include="partials/footer"></div>
-
-  <!-- Scripts order -->
-  <script src="assets/js/i18n.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
-  <script src="assets/js/auth.js"></script>
-  <script src="assets/js/app.js"></script>
-</body>
-</html>
