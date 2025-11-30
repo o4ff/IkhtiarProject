@@ -3,57 +3,191 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>لوحة المستخدم</title>
+  <title>لوحة التحكم | Ikhtiar</title>
+  
+  <!-- روابط التصميم الأساسية -->
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial) -->
+
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow purple" style="top: -20%; left: 40%;"></div>
+  <div class="ambient-glow green" style="bottom: 10%; right: 20%; width: 300px; height: 300px;"></div>
+
+  <!-- الناف بار -->
   <div data-include="partials/nav"></div>
 
-  <main class="container" role="main">
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
-      </button>
-    </nav>
+  <main class="container fade-in" role="main">
+    
+    <!-- رأس اللوحة (تحية + زر) -->
+    <header class="d-flex justify-between align-center wrap mb-4">
+      <div>
+        <h1 class="h2 mb-1">
+          <span data-i18n="dash.title">مرحباً بك،</span>
+          <span class="text-gradient" id="userNameDisplay">...</span> 👋
+        </h1>
+        <!-- هذه الجملة تُترجم بجافاسكربت (بدون data-i18n جديد) -->
+        <p class="muted" id="dashSubtitle">تابع تقدمك واكتشف فرصك الجديدة.</p>
+      </div>
+      <a class="btn primary glow-btn" href="survey.html">
+        <span data-i18n="dash.update">تحديث الاستبيان</span>
+        <span class="icon-arrow">↺</span>
+      </a>
+    </header>
 
-    <h1 data-i18n="dash.title">مرحباً بك</h1>
+    <!-- ملخص سريع (Stats) -->
+    <section class="grid-3 mb-4">
+      <div class="card glass-effect p-3 d-flex align-center gap-3">
+        <div class="icon-box purple mb-0">🎯</div>
+        <div>
+          <h3 class="h5 mb-0" id="dashFileStatusLabel">حالة الملف</h3>
+          <span class="badge glow tiny" style="margin-top:4px;" id="dashFileStatusBadge">مكتمل</span>
+        </div>
+      </div>
+      <div class="card glass-effect p-3 d-flex align-center gap-3">
+        <div class="icon-box green mb-0">🚀</div>
+        <div>
+          <h3 class="h5 mb-0" id="dashBestRecLabel">أفضل توصية</h3>
+          <span class="tiny muted" id="topRecBadge">...</span>
+        </div>
+      </div>
+      <div class="card glass-effect p-3 d-flex align-center gap-3">
+        <div class="icon-box blue mb-0">📅</div>
+        <div>
+          <h3 class="h5 mb-0" id="dashJoinDateLabel">تاريخ الانضمام</h3>
+          <span class="tiny muted" id="joinDateBadge">...</span>
+        </div>
+      </div>
+    </section>
 
-    <section class="grid-2">
+    <!-- المحتوى الرئيسي (شبكة) -->
+    <section class="grid-2 dashboard-grid">
+      
       <!-- بطاقة الملف الشخصي -->
-      <article class="card">
-        <h3 data-i18n="dash.profile">ملفي</h3>
-        <div id="profileBox"></div>
-        <a class="btn outline" href="survey.html" data-i18n="dash.update">تحديث الاستبيان</a>
+      <article class="card glass-effect p-4 h-full relative overflow-hidden">
+        <div class="d-flex justify-between align-center mb-3">
+          <h3 class="h4 section-title mb-0" data-i18n="dash.profile">ملفي الشخصي</h3>
+          <span class="icon-box icon-small" style="background:rgba(255,255,255,0.05);">👤</span>
+        </div>
+        
+        <div id="profileBox">
+          <!-- Skeleton Loading -->
+          <div class="stack">
+            <div class="skeleton" style="height: 20px; width: 60%;"></div>
+            <div class="skeleton" style="height: 20px; width: 80%;"></div>
+            <div class="skeleton" style="height: 20px; width: 50%;"></div>
+          </div>
+        </div>
       </article>
 
       <!-- بطاقة آخر التوصيات -->
-      <article class="card">
-        <h3 data-i18n="dash.latest">آخر التوصيات</h3>
-
-        <!-- Skeleton أثناء التحميل -->
-        <div id="latestRecs" class="stack" aria-busy="true" aria-live="polite">
-          <div class="skeleton" style="height:72px"></div>
-          <div class="skeleton" style="height:72px"></div>
-          <div class="skeleton" style="height:72px"></div>
+      <article class="card glass-effect p-4 h-full relative overflow-hidden">
+        <div class="d-flex justify-between align-center mb-3">
+          <h3 class="h4 section-title mb-0" data-i18n="dash.latest">آخر النتائج</h3>
+          <span class="icon-box icon-small" style="background:rgba(255,255,255,0.05);">✨</span>
         </div>
 
-        <a class="btn primary" href="recommendations.html" data-i18n="dash.viewAll">عرض الكل</a>
+        <div id="latestRecs" class="stack gap-3" aria-live="polite">
+          <!-- Skeleton Loading -->
+          <div class="skeleton" style="height: 60px; border-radius: 12px;"></div>
+          <div class="skeleton" style="height: 60px; border-radius: 12px;"></div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <a class="btn outline w-full" href="recommendations.html" data-i18n="dash.viewAll">عرض التفاصيل الكاملة</a>
+        </div>
       </article>
+
     </section>
   </main>
 
-  <!-- Footer (partial) -->
+  <!-- Footer -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
+  <!-- Scripts -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
+
+  <!-- Dashboard Specific Script (ترجمة النصوص الصغيرة + تحميل بيانات المستخدم) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+      const t = (ar, en) => (lang === 'ar' ? ar : (en || ar));
+
+      // ترجمة النصوص التي ليست في i18n.js (بدون إضافة مفاتيح جديدة)
+      const dashSubtitle = document.getElementById('dashSubtitle');
+      if (dashSubtitle) {
+        dashSubtitle.textContent = t(
+          'تابع تقدمك واكتشف فرصك الجديدة.',
+          'Track your progress and discover new opportunities.'
+        );
+      }
+
+      const fileStatusLabel = document.getElementById('dashFileStatusLabel');
+      if (fileStatusLabel) {
+        fileStatusLabel.textContent = t('حالة الملف', 'Profile status');
+      }
+
+      const fileStatusBadge = document.getElementById('dashFileStatusBadge');
+      if (fileStatusBadge) {
+        fileStatusBadge.textContent = t('مكتمل', 'Complete');
+      }
+
+      const bestRecLabel = document.getElementById('dashBestRecLabel');
+      if (bestRecLabel) {
+        bestRecLabel.textContent = t('أفضل توصية', 'Top match');
+      }
+
+      const joinDateLabel = document.getElementById('dashJoinDateLabel');
+      if (joinDateLabel) {
+        joinDateLabel.textContent = t('تاريخ الانضمام', 'Join date');
+      }
+
+      // انتظار app.js ليقوم بتهيئة Auth ثم تحميل اسم المستخدم وتاريخ الانضمام
+      setTimeout(async () => {
+        if (!window.Auth) return;
+        const user = await Auth.currentUser();
+        const nameEl = document.getElementById('userNameDisplay');
+        const joinEl = document.getElementById('joinDateBadge');
+
+        if (user && user.user_metadata && user.user_metadata.display_name) {
+          if (nameEl) nameEl.textContent = user.user_metadata.display_name;
+          if (joinEl) {
+            const locale = lang === 'ar' ? 'ar-EG' : 'en-GB';
+            joinEl.textContent = new Date(user.created_at).toLocaleDateString(locale);
+          }
+        } else if (nameEl) {
+          nameEl.textContent = t('زائر', 'Guest');
+        }
+      }, 500);
+    });
+  </script>
+
+  <style>
+    /* تحسينات خاصة باللوحة */
+    .dashboard-grid { align-items: start; }
+    .icon-small { width: 32px; height: 32px; font-size: 1rem; margin: 0; }
+    .wrap { flex-wrap: wrap; gap: 16px; }
+    
+    /* تنسيق خاص لعرض البيانات داخل البروفايل */
+    .profile-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .profile-label { font-weight: bold; color: var(--muted); min-width: 80px; }
+    .profile-val { color: var(--text); }
+  </style>
 </body>
 </html>
