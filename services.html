@@ -3,83 +3,183 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>الخدمات</title>
+  <title>الخدمات | Ikhtiar</title>
+  
+  <!-- نفس تنسيقات index.html للحفاظ على الهوية -->
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial) -->
+
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow purple"></div>
+  <div class="ambient-glow blue"></div>
+
+  <!-- Nav -->
   <div data-include="partials/nav"></div>
 
   <main class="container" role="main">
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
+    
+    <!-- زر الرجوع بتصميم بسيط -->
+    <div class="fade-in">
+      <button class="btn ghost icon mb-2" id="backBtn" type="button" aria-label="Back">
+        <span style="font-size: 1.2rem;">←</span> <span data-i18n="ui.back">رجوع</span>
       </button>
-    </nav>
+    </div>
 
-    <h1 data-i18n="services.title">الخدمات</h1>
+    <!-- عنوان الصفحة -->
+    <div class="text-center fade-in hero-small">
+      <div class="badge glow mb-2" data-i18n="services.badge">ماذا نقدم؟</div>
+      <h1 class="section-title big">
+        <span data-i18n="services.title">خدماتنا المميزة</span>
+      </h1>
+      <p class="muted narrow-text" style="margin: 0 auto;" data-i18n="services.helper">
+        نقدم لك مجموعة من الأدوات الذكية لمساعدتك في اتخاذ القرار الصحيح لمستقبلك المهني والأكاديمي.
+      </p>
+    </div>
 
-    <div class="grid-3">
-      <article class="card">
+    <!-- شبكة الخدمات (Services Grid) -->
+    <div class="grid-3 mt-4 fade-in" style="animation-delay: 0.1s;">
+      
+      <!-- خدمة 1: التوصيات -->
+      <article class="card glass-effect hover-scale">
+        <div class="icon-box purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+        </div>
         <h3 data-i18n="services.s1t">توصيات التخصص</h3>
-        <p data-i18n="services.s1d">قائمة مرتبة بالتخصصات الملائمة وفق ملفك واستجاباتك.</p>
+        <p class="muted" data-i18n="services.s1d">
+          نظام ذكي يحلل شخصيتك ويقترح عليك التخصصات الأنسب لقدراتك.
+        </p>
       </article>
-      <article class="card">
+
+      <!-- خدمة 2: سوق العمل -->
+      <article class="card glass-effect hover-scale">
+        <div class="icon-box green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
         <h3 data-i18n="services.s2t">رؤى سوق العمل</h3>
-        <p data-i18n="services.s2d"> المهارات، المسميات الوظيفية, والمنظمات الباحثة عن تخصصك.</p>
+        <p class="muted" data-i18n="services.s2d">
+          تعرف على المسميات الوظيفية المطلوبة والشركات التي تبحث عن تخصصك.
+        </p>
       </article>
-      <article class="card">
+
+      <!-- خدمة 3: مسارات التعلم -->
+      <article class="card glass-effect hover-scale">
+        <div class="icon-box blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+        </div>
         <h3 data-i18n="services.s3t">مسارات تعلم</h3>
-        <p data-i18n="services.s3d">دورات وشهادات مقترحة من منصات مثل Coursera وedX وUdemy.</p>
+        <p class="muted" data-i18n="services.s3d">
+          خارطة طريق للكورسات والشهادات من منصات عالمية لتقوية سيرتك الذاتية.
+        </p>
       </article>
     </div>
 
-    <!-- Plans -->
-    <section class="fade-in" style="margin-top:24px">
-      <h2 class="section-title">
-        <span class="dot"></span><span data-i18n="plans.title"></span> <span aria-hidden="true">📦</span>
-      </h2>
-      <div class="grid-3">
-        <article class="card">
-          <h3 data-i18n="plans.free"></h3>
-          <p style="font-weight:bold; font-size:18px; color:#444;" data-i18n="plans.free_price"></p>
-          <ul class="bullet">
-            <li data-i18n="plans.f1"></li>
-            <li data-i18n="plans.f2"></li>
+    <!-- قسم الباقات (Pricing Plans) -->
+    <section class="fade-in mt-4" style="animation-delay: 0.3s; margin-top: 60px;">
+      <div class="text-center mb-2">
+        <h2 class="section-title">
+          <span class="dot"></span> <span data-i18n="plans.title">باقات الاستخدام</span>
+        </h2>
+        <p class="muted" data-i18n="plans.helper">اختر الخطة المناسبة لاحتياجاتك</p>
+      </div>
+
+      <div class="pricing-grid">
+        
+        <!-- باقة 1: مجانية -->
+        <article class="card glass-effect pricing-card">
+          <div class="pricing-header">
+            <h3 data-i18n="plans.free">مجاني</h3>
+            <div class="price" data-i18n="plans.free_price">0 ر.س</div>
+          </div>
+          <ul class="feature-list">
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.f1">استبيان أساسي</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.f2">3 توصيات</span>
+            </li>
+            <li class="disabled">
+              <span>✕</span>
+              <span data-i18n="plans.f3">دعم فني</span>
+            </li>
           </ul>
-          <a class="btn outline" href="register.html" data-i18n="plans.start"></a>
+          <a class="btn outline w-full" href="register.html" data-i18n="plans.start">ابدأ مجاناً</a>
         </article>
 
-        <article class="card">
-          <h3 data-i18n="plans.std"></h3>
-          <p style="font-weight:bold; font-size:18px; color:#444;" data-i18n="plans.std_price"></p>
-          <ul class="bullet">
-            <li data-i18n="plans.s1"></li>
-            <li data-i18n="plans.s2"></li>
+        <!-- باقة 2: قياسية (المميزة) -->
+        <article class="card glass-effect pricing-card featured">
+          <div class="popular-tag" data-i18n="plans.popular">الأكثر طلباً</div>
+          <div class="pricing-header">
+            <h3 data-i18n="plans.std" class="text-gradient">قياسي</h3>
+            <div class="price" data-i18n="plans.std_price">99 ر.س</div>
+            <span class="period" data-i18n="plans.period">/ شهر</span>
+          </div>
+          <ul class="feature-list">
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.s1">توصيات غير محدودة</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.s2">مسارات تعلم موسعة</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.s3">أولوية الدعم</span>
+            </li>
           </ul>
-          <a class="btn primary" href="register.html" data-i18n="plans.choose"></a>
+          <a class="btn primary w-full glow-btn" href="register.html" data-i18n="plans.choose">اختر الباقة</a>
         </article>
 
-        <article class="card">
-          <h3 data-i18n="plans.pro"></h3>
-          <p style="font-weight:bold; font-size:18px; color:#444;" data-i18n="plans.pro_price"></p>
-          <ul class="bullet">
-            <li data-i18n="plans.p1"></li>
-            <li data-i18n="plans.p2"></li>
+        <!-- باقة 3: احترافية -->
+        <article class="card glass-effect pricing-card">
+          <div class="pricing-header">
+            <h3 data-i18n="plans.pro">احترافي</h3>
+            <div class="price" data-i18n="plans.pro_price">199 ر.س</div>
+            <span class="period" data-i18n="plans.period">/ شهر</span>
+          </div>
+          <ul class="feature-list">
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.p1">رؤى سوق متقدمة</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.p2">تصدير PDF</span>
+            </li>
+            <li>
+              <span class="check">✓</span>
+              <span data-i18n="plans.p3">جلسة استشارية</span>
+            </li>
           </ul>
-          <a class="btn outline" href="register.html" data-i18n="plans.contact"></a>
+          <a class="btn outline w-full" href="register.html" data-i18n="plans.contact">تواصل معنا</a>
         </article>
       </div>
     </section>
   </main>
 
-  <!-- Footer (partial) -->
+  <!-- Footer -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
+  <!-- Scripts -->
   <script src="assets/js/i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supa.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>
