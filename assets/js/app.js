@@ -1,316 +1,483 @@
-// Theme toggle, partial includes, nav bindings, page bootstrapping
 (function(){
   const body = document.body;
+  
+  // دالة مساعدة للترجمة داخل JS بدون الحاجة لـ data-i18n
+  function trInline(ar, en) {
+    const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+    return lang === 'ar' ? ar : (en || ar);
+  }
 
-  // Theme
+  // 1. إعداد الثيم عند التحميل
   const savedTheme = localStorage.getItem('theme') || 'dark';
   body.setAttribute('data-theme', savedTheme);
 
-  // Inject partials
-  document.querySelectorAll('[data-include="partials/nav"]').forEach(el=>{
+  // شعار الموقع (SVG) لضمان سرعة التحميل والدقة العالية
+  const LOGO_SVG = `<svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2ZM12 16.25L8.59 19L12 3.66L15.41 19L12 16.25Z"/></svg>`;
+
+  // 2. حقن القائمة العلوية (Navbar) بالتصميم الزجاجي
+  document.querySelectorAll('[data-include="partials/nav"]').forEach(el => {
     el.outerHTML = `
-      <header class="nav" aria-label="Primary">
-        <a class="brand" href="index.html"><img src="assets/img/logo.svg" class="logo" alt="Ikhtiar"><span>Ikhtiar</span></a>
-        <nav class="nav-links" aria-label="Main">
+      <header class="nav fade-in">
+        <a class="brand" href="index.html">${LOGO_SVG} <span>Ikhtiar</span></a>
+        <nav class="nav-links">
           <a href="index.html" data-i18n="nav.home">الرئيسية</a>
           <a href="services.html" data-i18n="nav.services">الخدمات</a>
           <a href="about.html" data-i18n="nav.about">عن المنصة</a>
-          <a href="survey.html" data-i18n="nav.survey">الاستبيان</a>
-          <a href="recommendations.html" data-i18n="nav.recs">التوصيات</a>
-          <a href="contact.html" data-i18n="nav.contact">تواصل</a>
-          <button id="logoutBtn" class="btn ghost" data-i18n="nav.logout">خروج</button>
+          <!-- الروابط الخاصة بالمستخدم -->
+          <a href="survey.html" data-i18n="nav.survey" class="user-only hidden">الاستبيان</a>
+          <a href="recommendations.html" data-i18n="nav.recs" class="user-only hidden">التوصيات</a>
+          <button id="logoutBtn" class="btn ghost user-only hidden" data-i18n="nav.logout">خروج</button>
         </nav>
         <div class="nav-actions">
-          <button id="langToggle" class="btn ghost" aria-label="Toggle Language">AR</button>
-          <button id="themeToggle" class="btn ghost" aria-label="Toggle Theme">●</button>
-          <a class="btn primary" href="login.html" data-i18n="nav.login">دخول</a>
+          <button id="langToggle" class="btn ghost">AR</button>
+          <button id="themeToggle" class="btn ghost">◑</button>
+          <a id="loginBtnNav" class="btn primary glow-btn" href="login.html" data-i18n="nav.login">دخول</a>
         </div>
       </header>`;
   });
-  document.querySelectorAll('[data-include="partials/footer"]').forEach(el=>{
+
+  // 3. حقن التذييل (Footer)
+  document.querySelectorAll('[data-include="partials/footer"]').forEach(el => {
     el.outerHTML = `
-      <footer class="footer">
+      <footer class="footer fade-in">
         <div class="footer-grid">
-          <div><div class="brand small"><img class="logo" src="assets/img/logo.svg" alt="Ikhtiar"><span>Ikhtiar</span></div><p class="muted" data-i18n="footer.tag">نقودك نحو الاختيار الأفضل.</p></div>
-          <div><h4 data-i18n="footer.links">روابط</h4><ul><li><a href="privacy.html" data-i18n="footer.privacy">الخصوصية</a></li><li><a href="about.html" data-i18n="footer.about">عن المنصة</a></li><li><a href="contact.html" data-i18n="footer.contact">تواصل</a></li></ul></div>
-          <div><h4 data-i18n="footer.start">ابدأ</h4><ul><li><a href="register.html" data-i18n="footer.register">إنشاء حساب</a></li><li><a href="login.html" data-i18n="footer.login">تسجيل دخول</a></li><li><a href="survey.html" data-i18n="footer.survey">الاستبيان</a></li></ul></div>
+          <div>
+            <div class="brand mb-2">${LOGO_SVG}<span>Ikhtiar</span></div>
+            <p class="muted tiny" data-i18n="footer.tag">نقودك نحو المستقبل التقني.</p>
+          </div>
+          <div>
+            <h4 data-i18n="footer.links">روابط</h4>
+            <div class="stack" style="gap:5px">
+              <a href="privacy.html" class="tiny muted" data-i18n="footer.privacy">الخصوصية</a>
+              <a href="contact.html" class="tiny muted" data-i18n="footer.contact">تواصل معنا</a>
+            </div>
+          </div>
         </div>
-        <p class="tiny muted">© 2025 Ikhtiar</p>
+        <div class="text-center mt-4 tiny muted" style="border-top:1px solid var(--border); padding-top:20px">
+          <span data-i18n="footer.copy">© 2025 Ikhtiar Platform</span>
+        </div>
       </footer>`;
   });
 
-  // Re-bind after inject
-  setTimeout(()=>{
-    // Theme toggle
-    const themeBtn = document.getElementById('themeToggle');
-    themeBtn && themeBtn.addEventListener('click', ()=>{
-      const next = body.getAttribute('data-theme')==='dark'?'light':'dark';
+  // 4. نظام الإشعارات (Toast System)
+  const Toast = {
+    show(msg, type='info') {
+      const d = document.createElement('div');
+      d.className = 'card glass-effect fade-in';
+      d.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 9999;
+        padding: 12px 24px; border-right: 4px solid ${type=='error'?'var(--err)':'var(--ok)'};
+        display: flex; align-items: center; gap: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      `;
+      d.innerHTML = `<span>${type=='error'?'❌':'✅'}</span> <span>${msg}</span>`;
+      body.appendChild(d);
+      setTimeout(() => { d.style.opacity='0'; setTimeout(()=>d.remove(), 300) }, 3000);
+    }
+  };
+  window.Toast = Toast;
+
+  // 5. مكون القوائم المتعددة المخصص (Custom Multi-Select)
+  const MultiSelectInstances = {};
+
+  function createMultiSelect(containerId, optionsList) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+    container.innerHTML = ''; 
+    let selectedValues = [];
+
+    const box = document.createElement('div');
+    box.className = 'multi-select-box';
+    
+    const input = document.createElement('input');
+    input.className = 'multi-select-input';
+    input.placeholder = trInline('ابحث واختر...', 'Search & select...');
+    
+    const dropdown = document.createElement('div');
+    dropdown.className = 'multi-select-dropdown glass-effect';
+
+    box.appendChild(input);
+    container.appendChild(box);
+    container.appendChild(dropdown);
+
+    function renderOptions(filterText = '') {
+      dropdown.innerHTML = '';
+      const filtered = optionsList.filter(opt => {
+        const label = (lang === 'ar' ? opt.ar : opt.en).toLowerCase();
+        return !selectedValues.includes(opt.val) && label.includes(filterText.toLowerCase());
+      });
+
+      if (filtered.length === 0) {
+        dropdown.innerHTML = `<div class="multi-option muted tiny">${trInline('لا توجد نتائج', 'No results')}</div>`;
+      } else {
+        filtered.forEach(opt => {
+          const div = document.createElement('div');
+          div.className = 'multi-option';
+          div.textContent = lang === 'ar' ? opt.ar : opt.en;
+          div.onclick = () => addTag(opt);
+          dropdown.appendChild(div);
+        });
+      }
+    }
+
+    function addTag(opt) {
+      if (selectedValues.includes(opt.val)) return;
+      selectedValues.push(opt.val);
+      
+      const tag = document.createElement('div');
+      tag.className = 'tag-chip';
+      tag.innerHTML = `<span>${lang === 'ar' ? opt.ar : opt.en}</span><span class="tag-close">&times;</span>`;
+      
+      tag.querySelector('.tag-close').onclick = (e) => {
+        e.stopPropagation();
+        selectedValues = selectedValues.filter(v => v !== opt.val);
+        tag.remove();
+      };
+
+      box.insertBefore(tag, input);
+      input.value = '';
+      input.focus();
+      renderOptions();
+    }
+
+    input.addEventListener('focus', () => { dropdown.classList.add('show'); renderOptions(); });
+    input.addEventListener('input', (e) => { dropdown.classList.add('show'); renderOptions(e.target.value); });
+    
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target)) dropdown.classList.remove('show');
+    });
+
+    MultiSelectInstances[containerId] = { getSelected: () => selectedValues };
+  }
+
+  // 6. تهيئة نماذج الاستبيان
+  function initSurveyForms() {
+    const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+    if (window.DataService) {
+      createMultiSelect('ms_strengths', DataService.surveyOptions.strengths);
+      createMultiSelect('ms_interests', DataService.surveyOptions.interests);
+      
+      const goalSel = document.getElementById('sel_goals');
+      if (goalSel) {
+        goalSel.innerHTML = `<option value="" disabled selected>${trInline('اختر هدفك...', 'Select goal...')}</option>`;
+        DataService.surveyOptions.goals.forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g.val;
+          opt.textContent = lang === 'ar' ? g.ar : g.en;
+          goalSel.appendChild(opt);
+        });
+      }
+    }
+  }
+
+  // 7. التنفيذ الرئيسي (Main Execution)
+  setTimeout(async () => {
+
+    // تفعيل الأزرار العامة
+    document.getElementById('langToggle')?.addEventListener('click', () => {
+      I18N.toggle();
+      setTimeout(() => location.reload(), 50);
+    });
+    
+    document.getElementById('themeToggle')?.addEventListener('click', () => {
+      const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       body.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
 
-    // Language toggle
-    const langBtn = document.getElementById('langToggle');
-    langBtn && langBtn.addEventListener('click', I18N.toggle);
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+      Auth.logout();
+      location.href = 'index.html';
+    });
+    
+    document.getElementById('backBtn')?.addEventListener('click', () => history.back());
+
+    // تطبيق الترجمة أولاً
     I18N.apply();
 
-    // Back button logic with safe fallback (single handler)
-    document.addEventListener('click', (e)=>{
-      const t = e.target.closest('#backBtn');
-      if(!t) return;
-      if(document.referrer && document.referrer !== location.href){
-        history.back();
-      } else {
-        if(location.pathname.endsWith('login.html')||location.pathname.endsWith('register.html')){
-          location.href='index.html';
-        } else if(location.pathname.endsWith('survey.html')||location.pathname.endsWith('recommendations.html')){
-          location.href='dashboard.html';
+    // التحقق من حالة تسجيل الدخول بعد الترجمة
+    const user = await Auth.currentUser();
+    if(user) {
+      document.querySelectorAll('.user-only').forEach(el => el.classList.remove('hidden'));
+      const inBtn = document.getElementById('loginBtnNav');
+      if(inBtn) { 
+        inBtn.href = 'dashboard.html'; 
+        inBtn.removeAttribute('data-i18n'); // مهم: عشان ما يرجعه "دخول"
+        inBtn.innerHTML = trInline(
+          'لوحتي <span class="icon">👤</span>',
+          'My dashboard <span class="icon">👤</span>'
+        );
+        inBtn.classList.add('outline'); 
+        inBtn.classList.remove('primary');
+      }
+    }
+
+    // --- منطق تسجيل الدخول (login.html) ---
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm && window.Auth) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fd = new FormData(loginForm);
+        const email = (fd.get('email') || '').trim();
+        const password = (fd.get('password') || '').trim();
+        const btn = loginForm.querySelector('button[type="submit"]');
+        const errEl = document.getElementById('loginErr');
+
+        if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+
+        if (!email || !password) {
+          const msg = trInline(
+            '⚠️ الرجاء إدخال البريد الإلكتروني وكلمة المرور.',
+            '⚠️ Please enter your email and password.'
+          );
+          if (errEl) {
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
+          }
+          if (window.Toast) Toast.show(trInline('الرجاء إدخال البريد وكلمة المرور', 'Please enter email and password'), 'error');
+          return;
+        }
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = trInline('جاري تسجيل الدخول... ⏳', 'Signing in... ⏳');
+        }
+
+        const ok = await Auth.login(email, password);
+
+        if (ok) {
+          const params = new URLSearchParams(location.search);
+          const next = params.get('next') || 'dashboard.html';
+          location.href = next;
         } else {
-          location.href='index.html';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span data-i18n="auth.login">دخول</span><span class="icon-arrow">➜</span>';
+          }
+        }
+      });
+    }
+
+    // --- منطق إنشاء الحساب (register.html) ---
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm && window.Auth) {
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fd = new FormData(registerForm);
+        const name = (fd.get('name') || '').trim();
+        const email = (fd.get('email') || '').trim();
+        const password = (fd.get('password') || '').trim();
+        const btn = registerForm.querySelector('button[type="submit"]');
+        const errEl = document.getElementById('registerErr');
+
+        if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+
+        if (!name || !email || !password) {
+          const msg = trInline(
+            '⚠️ الرجاء تعبئة جميع الحقول.',
+            '⚠️ Please fill in all fields.'
+          );
+          if (errEl) {
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
+          }
+          if (window.Toast) Toast.show(trInline('الرجاء تعبئة جميع الحقول', 'Please fill in all fields'), 'error');
+          return;
+        }
+
+        if (password.length < 6) {
+          const msg = trInline(
+            '🔒 كلمة المرور يجب أن تكون 6 أحرف على الأقل.',
+            '🔒 Password must be at least 6 characters.'
+          );
+          if (errEl) {
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
+          }
+          if (window.Toast) Toast.show(trInline('كلمة المرور قصيرة جداً', 'Password is too short.'), 'error');
+          return;
+        }
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = trInline('جاري إنشاء الحساب... ⏳', 'Creating account... ⏳');
+        }
+
+        const ok = await Auth.register(name, email, password);
+
+        if (ok) {
+          const loginOk = await Auth.login(email, password);
+          if (loginOk) {
+            if (window.Toast) Toast.show(
+              trInline('تم إنشاء الحساب وتسجيل الدخول بنجاح ✅', 'Account created and logged in successfully ✅'),
+              'success'
+            );
+            location.href = 'survey.html';
+          } else {
+            if (window.Toast) Toast.show(
+              trInline('تم إنشاء الحساب، فضلاً قم بتسجيل الدخول يدوياً.', 'Account created, please log in manually.'),
+              'info'
+            );
+            location.href = 'login.html';
+          }
+        } else {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span data-i18n="auth.create">إنشاء الحساب</span><span class="icon-arrow">✨</span>';
+          }
+        }
+      });
+    }
+
+    // تهيئة الاستبيان إذا وجد
+    if (document.getElementById('surveyForm')) initSurveyForms();
+
+    // --- منطق إرسال الاستبيان ---
+    const surveyForm = document.getElementById('surveyForm');
+    if(surveyForm) {
+      surveyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = surveyForm.querySelector('button[type="submit"]');
+        if(btn) { 
+          btn.disabled = true; 
+          btn.innerHTML = trInline(
+            'جاري التحليل... <span class="icon">⚙️</span>',
+            'Analyzing... <span class="icon">⚙️</span>'
+          );
+        }
+
+        try {
+          const u = await Auth.currentUser();
+          if(!u) throw new Error(trInline('يرجى تسجيل الدخول لحفظ النتائج.', 'Please log in to save your results.'));
+
+          const strengths = MultiSelectInstances['ms_strengths']?.getSelected() || [];
+          const interests = MultiSelectInstances['ms_interests']?.getSelected() || [];
+          const style = document.getElementById('sel_style').value;
+          const goals = document.getElementById('sel_goals').value;
+
+          if (strengths.length === 0 || interests.length === 0 || !style || !goals) {
+            throw new Error(trInline(
+              'الرجاء تعبئة جميع الحقول واختيار خيار واحد على الأقل.',
+              'Please fill in all fields and select at least one option.'
+            ));
+          }
+
+          const payload = { gpa: 0, strengths, interests, style, goals };
+
+          await supa.from('survey_answers').insert({ user_id: u.id, ...payload });
+
+          const recs = await DataService.generateRecommendations(payload);
+
+          await supa.from('recommendations').insert({ user_id: u.id, payload: recs });
+
+          Toast.show(
+            trInline('تم التحليل بنجاح! جاري عرض النتائج...', 'Analysis completed! Loading your results...'),
+            'success'
+          );
+          setTimeout(() => location.href = 'recommendations.html', 1500);
+
+        } catch (ex) {
+          console.error(ex);
+          Toast.show(ex.message || trInline('حدث خطأ', 'An error occurred'), 'error');
+          if(btn) { 
+            btn.disabled = false; 
+            btn.innerHTML = trInline('حاول مرة أخرى', 'Try again'); 
+          }
+        }
+      });
+    }
+
+    // --- منطق صفحة التوصيات ---
+    if(location.pathname.endsWith('recommendations.html')) {
+      const wrap = document.getElementById('recsList');
+      const marketWrap = document.getElementById('marketInsights');
+      
+      if(wrap && window.DataService) {
+        const u = await Auth.currentUser();
+        if(u){
+          const {data} = await supa.from('recommendations')
+            .select('*').eq('user_id', u.id).order('created_at', {ascending:false}).limit(1);
+            
+          if(data && data[0]){
+            wrap.innerHTML = '';
+            data[0].payload.forEach((r, idx) => {
+              const delay = idx * 0.1;
+              wrap.innerHTML += `
+                <div class="card glass-effect mb-4 fade-in" style="animation-delay: ${delay}s; border-left: 4px solid var(--brand);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h2 class="h3" style="margin:0; color:var(--brand)">${r.major}</h2>
+                    <span class="badge glow">${r.score}% ${trInline('توافق', 'match')}</span>
+                  </div>
+                  <p class="muted">${r.reason}</p>
+                  <div class="recs-grid-details">
+                     <div>
+                       <strong style="color:var(--accent)">💡 ${trInline('مهارات مطلوبة:', 'Required skills:')}</strong>
+                       <ul class="bullet tiny">${r.skills.map(s=>`<li>${s}</li>`).join('')}</ul>
+                     </div>
+                     <div>
+                       <strong style="color:#3b82f6">📚 ${trInline('كورسات مقترحة:', 'Suggested courses:')}</strong>
+                       <ul class="bullet tiny">${r.courses.map(c=>`<li>${c}</li>`).join('')}</ul>
+                     </div>
+                  </div>
+                </div>`;
+            });
+          } else {
+            wrap.innerHTML = `
+              <div class="card glass-effect p-4 text-center">
+                ${trInline('لا توجد توصيات بعد. ابدأ الاستبيان!', 'No recommendations yet. Start the survey!')}
+              </div>`;
+          }
+
+          const insights = await DataService.getMarketInsights();
+          if(marketWrap){
+            marketWrap.innerHTML = insights.map(i => `
+              <div class="card glass-effect p-3 hover-scale">
+                <div class="d-flex justify-between mb-2">
+                  <h4 class="h5 m-0">${i.title}</h4>
+                  <span class="badge tiny">${i.trend}</span>
+                </div>
+                <p class="tiny muted m-0">${i.summary}</p>
+              </div>
+            `).join('');
+          }
         }
       }
-    });
-
-    // Logout (single handler)
-    document.addEventListener('click',(e)=>{
-      const t=e.target.closest('#logoutBtn'); if(!t) return;
-      Auth.logout(); Toast.show('تم تسجيل الخروج 👋', 'info', 2000); location.href='index.html';
-    });
-  },0);
-
-  // Toast manager (unified, accessible)
-  const Toast = (function(){
-    const wrap = document.createElement('div');
-    wrap.setAttribute('role','region');
-    wrap.setAttribute('aria-live','polite');
-    wrap.style.position='fixed'; wrap.style.right='16px'; wrap.style.top='16px';
-    wrap.style.display='flex'; wrap.style.flexDirection='column'; wrap.style.gap='8px'; wrap.style.zIndex='9999';
-    document.addEventListener('DOMContentLoaded', ()=>document.body.appendChild(wrap));
-    function show(msg, type='info', timeout=2200){
-      const el = document.createElement('div');
-      el.className='card';
-      el.setAttribute('role','status');
-      el.style.minWidth='220px';
-      el.style.boxShadow='var(--shadow)';
-      el.style.borderLeft = `4px solid ${type==='success'?'var(--ok)':type==='error'?'var(--err)':'var(--brand)'}`;
-      el.textContent = msg;
-      wrap.prepend(el);
-      const id = setTimeout(()=>el.remove(), timeout);
-      el.addEventListener('click', ()=>{ clearTimeout(id); el.remove(); });
     }
-    return { show };
-  })();
 
-  // Forms
-  const loginForm = document.getElementById('loginForm');
-  loginForm && loginForm.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const f = new FormData(loginForm);
-    try{
-      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
-      const ok = await Auth.login(f.get('email'), f.get('password'));
-      if(ok){
-        Toast.show('تم تسجيل الدخول بنجاح ✅', 'success', 2400);
-        setTimeout(()=>location.href='dashboard.html', 600);
-      } else {
-        let err = document.getElementById('loginErr');
-        if(!err){ err = document.createElement('p'); err.id='loginErr'; err.className='tiny'; err.style.color='var(--err)'; loginForm.appendChild(err); }
-        err.textContent = 'تعذر تسجيل الدخول، تأكد من البيانات.';
-        Toast.show('فشل تسجيل الدخول ❌', 'error', 2000);
-      }
-    }catch(ex){
-      console.error(ex);
-      Toast.show('حدث خطأ غير متوقع ❌', 'error', 2000);
-    }
-  });
-
-  const registerForm = document.getElementById('registerForm');
-  registerForm && registerForm.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const f = new FormData(registerForm);
-    if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
-    const ok = await Auth.register(f.get('name'), f.get('email'), f.get('password'));
-    if(ok){
-      Toast.show('تم إنشاء الحساب ✨', 'success', 2000);
-      window.location.href = 'survey.html';
-    } else {
-      let er = document.getElementById('registerErr');
-      if(!er){ er=document.createElement('p'); er.id='registerErr'; er.className='tiny'; er.style.color='var(--err)'; registerForm.appendChild(er); }
-      er.textContent='تعذر إنشاء الحساب، قد يكون البريد مستخدماً.';
-      Toast.show('تعذر إنشاء الحساب ❌', 'error', 2000);
-    }
-  });
-
-  const surveyForm = document.getElementById('surveyForm');
-  surveyForm && surveyForm.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
-    const f = new FormData(surveyForm);
-    const payload = {
-      gpa: Number(f.get('gpa')||0),
-      strengths: DataService._normList(f.get('strengths')),
-      interests: DataService._normList(f.get('interests')),
-      style: f.get('style')||'visual',
-      goals: String(f.get('goals')||'').trim()
-    };
-
-    // 1) حفظ الإجابات في Supabase
-    const u = await Auth.currentUser();
-    if(!u){ Toast.show('الرجاء تسجيل الدخول أولاً', 'error', 2200); return; }
-
-    const { error: e1 } = await supa.from('survey_answers').insert({
-      user_id: u.id,
-      gpa: payload.gpa,
-      strengths: payload.strengths,
-      interests: payload.interests,
-      style: payload.style,
-      goals: payload.goals
-    });
-    if(e1){ console.error(e1); Toast.show('تعذّر حفظ الاستبيان', 'error', 2200); return; }
-
-    // 2) توليد التوصيات محلياً الآن (يمكن نقلها للخادم لاحقاً)
-    const recs = await DataService.generateRecommendations(payload);
-
-    // 3) حفظ snapshot للتوصيات
-    const { error: e2 } = await supa.from('recommendations').insert({
-      user_id: u.id,
-      source_version: 1,
-      payload: recs
-    });
-    if(e2){ console.error(e2); Toast.show('تم الحفظ محلياً لكن تعذّر حفظ التوصيات', 'warn', 2200); }
-
-    window.location.href = 'recommendations.html';
-  });
-
-  // Recommendations page
-  if(location.pathname.endsWith('recommendations.html')){
-    (async ()=>{
+    // --- منطق لوحة التحكم (Dashboard) ---
+    if(location.pathname.endsWith('dashboard.html')) {
       const u = await Auth.currentUser();
-      if(!u){ location.href='login.html'; return; }
-      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
-
-      const wrap = document.getElementById('recsList');
-      const { data, error } = await supa
-        .from('recommendations')
-        .select('payload, created_at')
-        .eq('user_id', u.id)
-        .order('created_at', { ascending:false })
-        .limit(1);
-
-      if(error){ console.error(error); wrap.innerHTML = '<p class="muted">تعذّر تحميل التوصيات.</p>'; return; }
-
-      const recs = Array.isArray(data?.[0]?.payload) ? data[0].payload : [];
-      if(!recs.length){
-        wrap.innerHTML = `<p class="muted">لا توجد توصيات بعد. ابدأ الاستبيان أولاً.</p>`;
-        return;
+      if(u){
+        const { data } = await supa.from('recommendations')
+          .select('payload').eq('user_id', u.id)
+          .order('created_at', {ascending:false}).limit(1);
+        const latestDiv = document.getElementById('latestRecs');
+        const topBadge = document.getElementById('topRecBadge');
+        
+        if(data && data[0] && latestDiv){
+          const topRec = data[0].payload[0];
+          if(topRec && topBadge) topBadge.textContent = topRec.major;
+          
+          latestDiv.innerHTML = data[0].payload.slice(0, 2).map(r => `
+            <div class="card glass-effect p-3 mb-2 border-l-brand">
+              <div class="d-flex justify-between">
+                <strong>${r.major}</strong>
+                <span class="tiny badge">${r.score}%</span>
+              </div>
+            </div>
+          `).join('');
+        } else if(latestDiv) {
+          latestDiv.innerHTML = `
+            <p class="tiny muted text-center">
+              ${trInline('لا توجد نتائج بعد.', 'No results yet.')}
+            </p>`;
+        }
       }
+    }
 
-      wrap.innerHTML = '';
-      recs.forEach(r=>{
-        const skills  = Array.isArray(r.skills)  ? r.skills.join(', ')  : '-';
-        const courses = Array.isArray(r.courses) ? r.courses.join(', ') : '-';
-        const roles   = Array.isArray(r.roles)   ? r.roles.join(', ')   : '';
-        const companies = Array.isArray(r.companies) ? r.companies.join(', ') : '';
-        const extraRoles = roles ? `<li>Job titles: ${roles}</li>` : '';
-        const extraCompanies = companies ? `<li>Top companies: ${companies}</li>` : '';
-
-        const el = document.createElement('article');
-        el.className='card';
-        el.innerHTML = `
-          <div class="badge">⭐ ${r.score ?? '-'}% match</div>
-          <h3>${r.major ?? '-'} <span aria-hidden="true">🎓</span></h3>
-          <p class="muted">${r.reason ?? ''}</p>
-          <ul class="bullet">
-            <li>Suggested skills: ${skills}</li>
-            <li>Certs/Courses: ${courses}</li>
-            ${extraRoles}
-            ${extraCompanies}
-          </ul>`;
-        wrap.appendChild(el);
-      });
-
-      // marketInsights (محلي حالياً)
-      const mi = document.getElementById('marketInsights');
-      if(mi){
-        const insights = await DataService.getMarketInsights();
-        mi.innerHTML = insights.map(x=>`
-          <article class="card">
-            <h4>${x.title}</h4>
-            <p class="muted">${x.summary}</p>
-            <div class="badge">${x.trend}</div>
-          </article>
-        `).join('');
-      }
-    })();
-  }
-
-  // Dashboard
-  if(location.pathname.endsWith('dashboard.html')){
-    (async ()=>{
-      const u = await Auth.currentUser();
-      if(!u){ location.href='login.html'; return; }
-      if(!window.supa){ Toast.show('خدمة Supabase غير مهيأة', 'error', 2200); return; }
-
-      const box = document.getElementById('profileBox');
-      const { data: ans, error: eA } = await supa
-        .from('survey_answers')
-        .select('*')
-        .eq('user_id', u.id)
-        .order('created_at', { ascending:false })
-        .limit(1);
-
-      if(eA){ console.error(eA); }
-
-      if(box && ans && ans[0]){
-        const p = ans[0];
-        const strengths = Array.isArray(p.strengths) ? p.strengths.join(', ') : '-';
-        const interests = Array.isArray(p.interests) ? p.interests.join(', ') : '-';
-        box.innerHTML = `
-          <div class="card">
-            <p><strong>GPA:</strong> ${p.gpa ?? '-'}</p>
-            <p><strong>Strengths:</strong> ${strengths}</p>
-            <p><strong>Interests:</strong> ${interests}</p>
-            <p><strong>Style:</strong> ${p.style || '-'}</p>
-            <p><strong>Goals:</strong> ${p.goals || '-'}</p>
-          </div>`;
-      }
-
-      const latest = document.getElementById('latestRecs');
-      const { data: recRows, error: eR } = await supa
-        .from('recommendations')
-        .select('payload, created_at')
-        .eq('user_id', u.id)
-        .order('created_at', { ascending:false })
-        .limit(1);
-
-      if(eR){ console.error(eR); }
-
-      if(latest && recRows && recRows[0]){
-        const payload = Array.isArray(recRows[0].payload) ? recRows[0].payload : [];
-        const recs = payload.slice(0,3);
-        latest.innerHTML = recs.map(r=>`
-          <div class="card">
-            <div class="badge">${r.score ?? '-'}%</div>
-            <h4>${r.major ?? '-'}</h4>
-            <p class="muted">${r.reason ?? ''}</p>
-          </div>
-        `).join('');
-      }
-
-      Toast.show('Welcome back 👋', 'info', 1600);
-    })();
-  }
-
-  // Survey progress indicator
-  if(document.getElementById('surveyForm')){
-    const bar = document.getElementById('surveyProgress');
-    const inputs = [...document.querySelectorAll('#surveyForm input, #surveyForm select, #surveyForm textarea')];
-    const update = ()=>{
-      const filled = inputs.filter(i=>i.value && i.value.length>0).length;
-      const pct = Math.min(100, Math.round((filled/inputs.length)*100));
-      if(bar) bar.style.width = pct + '%';
-    };
-    inputs.forEach(i=>i.addEventListener('input', update));
-    update();
-  }
+  }, 100);
 })();
