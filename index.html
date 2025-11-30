@@ -2,182 +2,164 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ikhtiar | منصة توجيه التخصصات</title>
-  <meta name="description" content="منصة اختيار لتوصية التخصصات والمسارات التعليمية مع رؤى سوق العمل.">
-  <meta name="color-scheme" content="dark light">
-  <link rel="preload" href="assets/css/theme.css" as="style" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="title.index">Ikhtiar | مستقبلك يبدأ هنا</title>
+  
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Header -->
-  <header class="nav" aria-label="Primary">
-    <a class="brand" href="index.html">
-      <img src="assets/img/logo.svg" alt="Ikhtiar" class="logo">
-      <span>Ikhtiar</span>
-    </a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="index.html" data-i18n="nav.home">الرئيسية</a>
-      <a href="services.html" data-i18n="nav.services">الخدمات</a>
-      <a href="about.html" data-i18n="nav.about">عن المنصة</a>
-      <a href="survey.html" data-i18n="nav.survey">الاستبيان</a>
-      <a href="recommendations.html" data-i18n="nav.recs">التوصيات</a>
-      <a href="contact.html" data-i18n="nav.contact">تواصل</a>
-    </nav>
-    <div class="nav-actions">
-      <button id="langToggle" class="btn ghost" aria-label="Toggle Language">AR</button>
-      <button id="themeToggle" class="btn ghost" aria-label="Toggle Theme">●</button>
-      <a class="btn primary" href="login.html" data-i18n="nav.login">دخول</a>
-    </div>
-  </header>
+  
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow purple"></div>
+  <div class="ambient-glow green"></div>
 
-  <!-- Main -->
+  <!-- الناف بار -->
+  <div data-include="partials/nav"></div>
+
   <main>
-    <!-- Hero -->
-    <section class="hero">
+    <!-- قسم الهيرو -->
+    <section class="container hero fade-in">
       <div class="hero-text">
-        <h1 data-i18n="hero.title">اختيارك يبدأ من هنا</h1>
-        <p class="muted" data-i18n="hero.subtitle">
-          منصة اختيار تساعدك على اختيار تخصصك الاكاديمي واقتراح دورات متوافقة مع التخصص لتهيئتك لسوق العمل.
+        <div class="badge glow mb-2" data-i18n="hero.badge">✨ الإصدار الذكي 2025</div>
+        
+        <h1>
+          <span data-i18n="hero.title">اكتشف شغفك التقني</span><br>
+          <span class="text-gradient">Ikhtiar</span>
+        </h1>
+
+        <p class="muted hero-description" data-i18n="hero.subtitle">
+          نستخدم الذكاء الاصطناعي لتحليل مهاراتك، اهتماماتك، وشخصيتك، لنرسم لك خارطة طريق واضحة ومخصصة نحو التخصص الأنسب لك في سوق العمل.
         </p>
-        <div class="hero-cta">
-          <a class="btn primary" href="survey.html" data-i18n="hero.ctaStart">ابدأ الاستبيان</a>
-          <a class="btn outline" href="about.html" data-i18n="hero.ctaLearn">تعرف أكثر</a>
+        
+        <div class="nav-actions mt-4">
+          <a class="btn primary big-btn" href="survey.html">
+            <span data-i18n="hero.ctaStart">ابدأ التحليل الآن</span>
+            <span class="icon-arrow">←</span>
+          </a>
+          <a class="btn outline big-btn" href="about.html" data-i18n="hero.ctaLearn">تعرف علينا</a>
         </div>
-        <ul class="key-points">
-          <li data-i18n="hero.p1">توصيات مخصصة حسب اهتماماتك ومهاراتك</li>
-          <li data-i18n="hero.p2">اقتراح شهائد مهنية ومسميات وظيفية لتخصصك</li>
-          <li data-i18n="hero.p3">دعم كامل للعربية والإنجليزية وواجهة يسهل استخدامها</li>
-        </ul>
+        
+        <div class="hero-stats mt-4">
+          <div class="stat-item">
+            <span class="stat-num">+50</span>
+            <span class="stat-label" data-i18n="hero.statMajors">تخصص تقني</span>
+          </div>
+          <div class="divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">AI</span>
+            <span class="stat-label" data-i18n="hero.statAccuracy">تحليل دقيق</span>
+          </div>
+        </div>
       </div>
-      <div class="hero-art" role="img" aria-label="AI guidance illustration">
-        <img src="assets/img/placeholder-illustration.svg" alt="">
+
+      <div class="hero-art">
+        <div class="image-wrapper">
+          <img
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
+            alt="Abstract Future" 
+            class="hero-img floating-anim"
+          >
+          <div class="glass-card-float">
+            <span data-i18n="hero.badgeCard">🎯 دقة عالية</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-      <h2 data-i18n="features.title">لماذا Ikhtiar؟</h2>
-      <div class="grid-3">
-        <article class="card">
-          <h3 data-i18n="features.f1t">بوصلتك الذكية</h3>
-          <p data-i18n="features.f1d">نظام توصية متقدم يوجّهك نحو مستقبلك الأكاديمي والمهني بثقة.</p>
-        </article>
-        <article class="card">
-          <h3 data-i18n="features.f2t">لوحة تقدم</h3>
-          <p data-i18n="features.f2d">تابع تقدمك، حدّث ملفك، وقدّم ملاحظات لتحسين دقّة التوصيات مع الوقت.</p>
-        </article>
-        <article class="card">
-          <h3 data-i18n="features.f3t">قابلة للتوسع والتطوير</h3>
-          <p data-i18n="features.f3d">بنية تقنية حديثة تتيح التوسع المستقبلي وربط المنصة بمصادر بيانات متعددة.</p>
-        </article>
+    <div class="section-divider"></div>
+
+    <!-- قسم المميزات -->
+    <section class="container mt-4 fade-in" style="animation-delay: 0.2s">
+      <div class="text-center mb-2">
+        <h2 class="section-title" data-i18n="features.title">لماذا تختار Ikhtiar؟</h2>
+        <p class="muted narrow-text" data-i18n="features.helper">
+          نقدم لك تجربة مختلفة عن أي اختبار تقليدي.
+        </p>
+      </div>
+
+      <div class="grid-3 mt-4">
+        <div class="card glass-effect hover-scale">
+          <div class="icon-box purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/>
+              <path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <h3 data-i18n="features.f1t">تحليل بالذكاء الاصطناعي</h3>
+          <p class="muted" data-i18n="features.f1d">
+            خوارزميات متقدمة لا تعتمد على الدرجات فقط، بل تربط شغفك بمتطلبات السوق الحالية.
+          </p>
+        </div>
+
+        <div class="card glass-effect hover-scale">
+          <div class="icon-box green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <h3 data-i18n="features.f3t">مسارات واضحة</h3>
+          <p class="muted" data-i18n="features.f3d">
+            لا نعطيك اسم التخصص فقط، بل نرسم لك خارطة طريق تشمل الدورات والشهادات المهنية.
+          </p>
+        </div>
+
+        <div class="card glass-effect hover-scale">
+          <div class="icon-box blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3 data-i18n="features.f2t">ثنائي اللغة</h3>
+          <p class="muted" data-i18n="features.f2d">
+            دعم كامل للواجهة والنتائج باللغتين العربية والإنجليزية لتناسب تفضيلاتك.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- How it works -->
-    <section class="how fade-in">
-      <h2 class="section-title"><span class="dot"></span><span data-i18n="how.title">كيف نعمل؟</span> <span aria-hidden="true">🤖</span></h2>
-      <div class="grid-3">
-        <article class="card soft">
-          <h3 data-i18n="how.s1t">استبيان تفاعلي</h3>
-          <p class="muted" data-i18n="how.s1d">نحلّل إجاباتك بذكاء لنرسم لك المسار الأنسب.</p>
-        </article>
-        <article class="card soft">
-          <h3 data-i18n="how.s2t">تطابق ديناميكي</h3>
-          <p class="muted" data-i18n="how.s2d">نقيّم الملائمة عبر نقاط متعددة ونبني ترتيباً واضحاً.</p>
-        </article>
-        <article class="card soft">
-          <h3 data-i18n="how.s3t">خطة تعلم</h3>
-          <p class="muted" data-i18n="how.s3d">نقترح مهارات ودورات وشهادات لرفع فرصك.</p>
-        </article>
+    <!-- قسم خطوات الرحلة -->
+    <section class="container mt-4 fade-in steps-section">
+      <div class="text-center">
+        <h2 class="section-title" data-i18n="steps.title">رحلتك معنا</h2>
+      </div>
+      <div class="steps-grid mt-4">
+        <div class="step-item">
+          <span class="step-num">01</span>
+          <h4 data-i18n="steps.1t">سجّل دخولك</h4>
+          <p class="muted tiny" data-i18n="steps.1d">أنشئ حساباً لحفظ نتائجك ومتابعة تقدمك.</p>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <span class="step-num">02</span>
+          <h4 data-i18n="steps.2t">أكمل الاستبيان</h4>
+          <p class="muted tiny" data-i18n="steps.2d">أسئلة تفاعلية تحدد ميولك ونمط تعلمك.</p>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-item">
+          <span class="step-num">03</span>
+          <h4 data-i18n="steps.3t">احصل على التوصية</h4>
+          <p class="muted tiny" data-i18n="steps.3d">استلم خطة شاملة لمستقبلك التقني.</p>
+        </div>
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="testimonials fade-in">
-      <h2 class="section-title"><span class="dot"></span><span data-i18n="testi.title">قالوا عنا</span> <span aria-hidden="true">🌟</span></h2>
-      <div class="grid-3">
-        <blockquote class="card">
-          <p data-i18n="testi.t1">ساعدني أفهم الفرق بين علوم الحاسب وتقنية المعلومات وبدأت مساري بثقة.</p>
-          <p class="tiny muted">— Saud</p>
-        </blockquote>
-        <blockquote class="card">
-          <p data-i18n="testi.t2">الواجهة بسيطة والتوصيات منطقية, يعطيكم العافية.</p>
-          <p class="tiny muted">— Abdulmajeed</p>
-        </blockquote>
-        <blockquote class="card">
-          <p data-i18n="testi.t3">لوحة التقدم تخلي المتابعة ممتعة.</p>
-          <p class="tiny muted">— Ali</p>
-        </blockquote>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="faq fade-in">
-      <h2 class="section-title"><span class="dot"></span><span data-i18n="faq.title">الأسئلة الشائعة</span> <span aria-hidden="true">❓</span></h2>
-      <div class="stack">
-        <details class="card">
-          <summary data-i18n="faq.q1">هل التوصيات نهائية؟</summary>
-          <p class="muted" data-i18n="faq.a1">هي نقطة بداية قابلة للتخصيص حسب أهدافك وتقدمك.</p>
-        </details>
-        <details class="card">
-          <summary data-i18n="faq.q2">هل يدعم اللغة العربية والانجليزية بالكامل؟</summary>
-          <p class="muted" data-i18n="faq.a2">نعم، يدعم RTL وواجهة ثنائية اللغة مع تبديل فوري.</p>
-        </details>
-        <details class="card">
-          <summary data-i18n="faq.q3">هل البيانات آمنة؟</summary>
-          <p class="muted" data-i18n="faq.a3">نلتزم بتخزين آمن وتشفير عند الربط الخلفي.</p>
-        </details>
-      </div>
-    </section>
-
-    <!-- CTA band -->
-    <section class="cta-band">
-      <div class="cta-content">
-        <h3 data-i18n="ctaBand.title">ابدأ رحلتك بثقة</h3>
-        <p data-i18n="ctaBand.text">أجب عن أسئلة قصيرة، واحصل على توصيات مخصصة لميولك وبياناتك.</p>
-      </div>
-      <a class="btn primary" href="survey.html" data-i18n="ctaBand.cta">ابدأ الآن</a>
-    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-grid">
-      <div>
-        <div class="brand small">
-          <img src="assets/img/logo.svg" alt="Ikhtiar" class="logo">
-          <span>Ikhtiar</span>
-        </div>
-        <p class="muted" data-i18n="footer.tag">نقودك نحو الاختيار الأفضل.</p>
-      </div>
-      <div>
-        <h4 data-i18n="footer.links">روابط</h4>
-        <ul>
-          <li><a href="privacy.html" data-i18n="footer.privacy">الخصوصية</a></li>
-          <li><a href="about.html" data-i18n="footer.about">عن المنصة</a></li>
-          <li><a href="contact.html" data-i18n="footer.contact">تواصل</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 data-i18n="footer.start">ابدأ</h4>
-        <ul>
-          <li><a href="register.html" data-i18n="footer.register">إنشاء حساب</a></li>
-          <li><a href="login.html" data-i18n="footer.login">تسجيل دخول</a></li>
-          <li><a href="survey.html" data-i18n="footer.survey">الاستبيان</a></li>
-        </ul>
-      </div>
-    </div>
-    <p class="tiny muted">© 2025 Ikhtiar</p>
-  </footer>
+  <!-- الفوتر -->
+  <div data-include="partials/footer"></div>
 
-  <!-- Scripts: keep order consistent site‑wide -->
+  <!-- السكربتات -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>
