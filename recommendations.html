@@ -3,50 +3,114 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>التوصيات</title>
+  <title>نتائج التحليل | Ikhtiar</title>
+  
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial) -->
+
+  <div class="ambient-glow purple"></div>
+  <div class="ambient-glow green" style="top: 20%; right: 20%;"></div>
+
   <div data-include="partials/nav"></div>
 
-  <main class="container" role="main">
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
+  <main class="container narrow fade-in" role="main">
+    
+    <div class="d-flex justify-between align-center mb-4">
+      <button class="btn ghost icon" id="backBtn" type="button">
+        <span style="font-size: 1.2rem;">←</span> <span data-i18n="ui.back">رجوع</span>
       </button>
-    </nav>
-
-    <h1 data-i18n="recs.title">توصياتك</h1>
-
-    <!-- Recommendations list (filled by app.js) -->
-    <div id="recsList" class="stack" aria-live="polite">
-      <!-- Optional skeleton placeholders -->
-      <div class="skeleton" style="height:96px"></div>
-      <div class="skeleton" style="height:96px"></div>
+      
+      <button class="btn outline small" onclick="window.print()">
+        <span>🖨️</span> <span data-i18n="recs.print">طباعة التقرير</span>
+      </button>
     </div>
 
-    <section class="card">
-      <h2 data-i18n="recs.market">رؤى سوق العمل</h2>
-      <p class="muted" data-i18n="recs.marketNote">
-   
+    <div class="text-center hero-small mb-4">
+      <div class="badge glow mb-2" data-i18n="recs.badge">تم التحليل بنجاح ✅</div>
+      <h1 class="section-title">
+        <span data-i18n="recs.fullTitleMain">خارطة طريقك</span>
+        <span class="text-gradient" data-i18n="recs.fullTitleAccent">المستقبلية</span>
+      </h1>
+      <p class="muted" data-i18n="recs.subtitle">
+        بناءً على خوارزميات الذكاء الاصطناعي، هذه هي المسارات الأكثر توافقاً مع شغفك.
       </p>
-      <div id="marketInsights" class="grid-3" aria-live="polite"></div>
+    </div>
+
+    <div id="recsList" class="stack gap-4" aria-live="polite">
+      <div class="card glass-effect skeleton-card">
+        <div class="skeleton" style="height: 30px; width: 40%; margin-bottom: 20px;"></div>
+        <div class="skeleton" style="height: 15px; width: 80%; margin-bottom: 10px;"></div>
+        <div class="skeleton" style="height: 15px; width: 60%;"></div>
+      </div>
+    </div>
+
+    <div class="section-divider mt-4 mb-4"></div>
+
+    <section>
+      <div class="d-flex align-center gap-2 mb-4">
+        <div class="icon-box green" style="width: 40px; height: 40px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <h2 class="h3 mb-0" data-i18n="recs.market">رؤى سوق العمل 2025</h2>
+      </div>
+      
+      <div id="marketInsights" class="grid-3" aria-live="polite">
+        <div class="card glass-effect skeleton" style="height: 150px;"></div>
+        <div class="card glass-effect skeleton" style="height: 150px;"></div>
+        <div class="card glass-effect skeleton" style="height: 150px;"></div>
+      </div>
     </section>
+
+    <div class="card glass-effect mt-4 text-center p-4" style="border-color: var(--brand);">
+  <h3 data-i18n="recs.helpTitle">هل تحتاج لمساعدة في البدء؟</h3>
+  <p class="muted mb-2" data-i18n="recs.helpText">
+    فريقنا مستعد لمساعدتك في اختيار الكورسات المناسبة.
+  </p>
+  <a href="contact.html" class="btn primary glow-btn" data-i18n="recs.helpBtn">
+    تواصل مع مرشد أكاديمي
+  </a>
+</div>
+
+
   </main>
 
-  <!-- Footer (partial) -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
+
+  <style>
+    @media print {
+      .nav, .footer, .btn, .ambient-glow { display: none !important; }
+      body { background: white; color: black; }
+      .card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
+      .text-gradient { background: none; -webkit-text-fill-color: black; color: black; }
+    }
+    
+    /* تحسين شكل القوائم داخل الكروت */
+    .recs-grid-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+      background: rgba(0,0,0,0.2);
+      padding: 15px;
+      border-radius: 12px;
+    }
+    @media (max-width: 600px) { 
+      .recs-grid-details { grid-template-columns: 1fr; } 
+    }
+  </style>
 </body>
 </html>
-
