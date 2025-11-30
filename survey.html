@@ -3,82 +3,94 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>الاستبيان</title>
+  <title data-i18n="title.survey">الاستبيان | Ikhtiar</title>
+  
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial) -->
+
+  <div class="ambient-glow purple"></div>
+  <div class="ambient-glow green"></div>
+
   <div data-include="partials/nav"></div>
 
-  <main class="container" role="main">
-    <!-- Progress and helper text -->
-    <div class="progress" aria-hidden="true" style="margin-bottom:10px">
-      <span id="surveyProgress" style="width:33%"></span>
-    </div>
-    <p class="tiny muted" data-i18n="survey.helper">أجب بصدق لتحصل على أفضل مواءمة ✨</p>
-
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
+  <main class="container narrow fade-in" role="main">
+    
+    <div class="mb-2">
+      <button class="btn ghost icon" id="backBtn" type="button">
+        <span style="font-size: 1.2rem;">←</span> <span data-i18n="ui.back">رجوع</span>
       </button>
-    </nav>
-
-    <h1 data-i18n="survey.title">استبيان التخصص</h1>
-
-    <form id="surveyForm" class="form card">
-      <fieldset>
-        <legend data-i18n="survey.section1">البيانات الأكاديمية</legend>
-        <label>
-          <span data-i18n="survey.gpa">المعدل التقريبي GPA</span>
-          <input type="number" step="0.01" min="0" max="5" name="gpa" required />
-        </label>
-        <label>
-          <span data-i18n="survey.strengths">المواد المفضلة</span>
-          <input type="text" name="strengths" placeholder="Math, Physics, CS..." />
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend data-i18n="survey.section2">الاهتمامات والميول</legend>
-        <label>
-          <span data-i18n="survey.interests">مجالات تهمك</span>
-          <input type="text" name="interests" placeholder="AI, Networks, Business..." />
-        </label>
-        <label>
-          <span data-i18n="survey.style">أسلوب التعلم</span>
-          <select name="style">
-            <option value="visual" data-i18n="survey.style.visual">مرئي</option>
-            <option value="auditory" data-i18n="survey.style.auditory">سمعي</option>
-            <option value="kinesthetic" data-i18n="survey.style.kin">عملي</option>
-          </select>
-        </label>
-      </fieldset>
-
-      <fieldset>
-        <legend data-i18n="survey.section3">الأهداف المهنية</legend>
-        <label>
-          <span data-i18n="survey.goals">أهدافك</span>
-          <input type="text" name="goals" placeholder="Research, Industry, Startup..." />
-        </label>
-      </fieldset>
-
-      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn primary" type="submit" data-i18n="survey.submit">احصل على التوصيات</button>
+    </div>
+    
+    <div class="card glass-effect" style="position:relative; overflow:visible; padding: 40px;">
+      
+      <div class="text-center mb-2">
+        <h1 class="section-title text-gradient" data-i18n="survey.title">استبيان تحديد المسار</h1>
+        <p class="muted" data-i18n="survey.helper">اختر مهاراتك واهتماماتك بدقة (يمكنك اختيار أكثر من واحدة).</p>
       </div>
-    </form>
+
+      <form id="surveyForm" class="stack mt-4">
+        
+        <div style="position:relative; z-index: 20;">
+          <label class="input-label">
+            <span class="icon">⚡</span>
+            <span data-i18n="survey.strengths">نقاط قوتك / مهاراتك</span>
+          </label>
+          <div id="ms_strengths" class="multi-select-wrapper"></div>
+        </div>
+
+        <div style="position:relative; z-index: 15;">
+          <label class="input-label">
+            <span class="icon">💡</span>
+            <span data-i18n="survey.interests">اهتماماتك التقنية</span>
+          </label>
+          <div id="ms_interests" class="multi-select-wrapper"></div>
+        </div>
+
+        <div style="position:relative; z-index: 10;">
+          <label class="input-label">
+            <span class="icon">🧠</span>
+            <span data-i18n="survey.style">كيف تفضل أن تتعلم؟</span>
+          </label>
+          <div class="select-wrapper">
+            <select name="style" id="sel_style" required>
+              <option value="visual" data-i18n="survey.style.visual">بصري (فيديوهات وصور)</option>
+              <option value="auditory" data-i18n="survey.style.auditory">سمعي (محاضرات وشرح صوتي)</option>
+              <option value="kinesthetic" data-i18n="survey.style.kinesthetic">عملي (تطبيق وتجربة باليد)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="position:relative; z-index: 5;">
+          <label class="input-label">
+            <span class="icon">🎯</span>
+            <span data-i18n="survey.goals">ما هو هدفك المهني؟</span>
+          </label>
+          <div class="select-wrapper">
+            <select name="goals" id="sel_goals" required></select>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <button class="btn primary glow-btn w-full big-btn" type="submit">
+            <span data-i18n="survey.submit">تحليل وإظهار النتائج</span>
+            <span class="icon-arrow">✨</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </main>
 
-  <!-- Footer (partial) -->
   <div data-include="partials/footer"></div>
-
-  <!-- Scripts order -->
+  
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>
