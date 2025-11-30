@@ -3,55 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>عن Ikhtiar</title>
+  <title>عن المنصة | Ikhtiar</title>
+  
+  <!-- روابط التصميم الأساسية -->
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial is injected by app.js) -->
+
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow purple" style="top: -10%; left: 30%;"></div>
+  <div class="ambient-glow blue" style="bottom: 10%; right: 10%;"></div>
+
+  <!-- الناف بار -->
   <div data-include="partials/nav"></div>
 
-  <main class="container" role="main">
-    <!-- Back button (local to secondary pages) -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
+  <main class="container fade-in" role="main">
+    
+    <!-- زر الرجوع -->
+    <div class="mb-2">
+      <button class="btn ghost icon" id="backBtn" type="button">
+        <span style="font-size: 1.2rem;">←</span> <span data-i18n="ui.back">رجوع</span>
       </button>
-    </nav>
+    </div>
 
-    <header>
-      <h1 data-i18n="about.title">عن المنصة</h1>
-      <p class="muted" data-i18n="about.1">
-        Ikhtiar مشروع يهدف لدعم الطلاب باتخاذ قرارات مدروسة حول تخصصاتهم باستخدام الذكاء الاصطناعي واستبيان مُهيكل.
-      </p>
-    </header>
-
-    <section aria-labelledby="goals">
-      <h2 id="goals" data-i18n="about.goals">الأهداف</h2>
-      <ul class="bullet">
-        <li data-i18n="about.g1">توصيات شخصية للتخصصات والدورات</li>
-        <li data-i18n="about.g2">تعلم مخصص حسب احتياجاتك</li>
-        <li data-i18n="about.g3">ربط مهاراتك بسوق العمل, وادراج المسميات الوظيفية لتخصصك.</li>
-      </ul>
+    <!-- قسم المقدمة (Hero Card) -->
+    <section class="card glass-effect p-4 mb-4 relative overflow-hidden" style="min-height: 300px; display: flex; align-items: center;">
+      <!-- عنصر جمالي في الخلفية -->
+      <div class="ambient-glow green" style="width: 300px; height: 300px; right: -100px; top: -100px; opacity: 0.1;"></div>
+      
+      <div class="grid-2 align-center w-full relative z-10">
+        <div>
+          <div class="badge glow mb-2" data-i18n="about.badge">رؤيتنا</div>
+          <h1 class="section-title big mb-2">
+            <span data-i18n="about.heroPrefix">قصة</span>
+            <span class="text-gradient">Ikhtiar</span>
+          </h1>
+          <p class="muted text-lg" data-i18n="about.1" style="line-height: 1.8;">
+            Ikhtiar مشروع طموح يهدف لتمكين الطلاب من رسم مستقبلهم بدقة. ندمج بين التوجيه الأكاديمي وقوة الذكاء الاصطناعي لنقدم تجربة فريدة في اختيار التخصص.
+          </p>
+        </div>
+        <!-- رسم توضيحي بسيط (SVG) -->
+        <div class="text-center mobile-hidden">
+           <svg width="250" height="250" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="0.5" style="opacity: 0.8;">
+             <circle cx="12" cy="12" r="10"></circle>
+             <circle cx="12" cy="12" r="6" stroke="var(--accent)"></circle>
+             <circle cx="12" cy="12" r="2" fill="var(--text)"></circle>
+             <path d="M12 2 L12 22 M2 12 L22 12" stroke="var(--border)"></path>
+           </svg>
+        </div>
+      </div>
     </section>
 
-    <section aria-labelledby="scope">
-      <h2 id="scope" data-i18n="about.scope">نطاق المشروع</h2>
-      <p data-i18n="about.scopeText">
-        تصميم قابل للتوسّع، جمع وتحليل بيانات المستخدم، دمج خوارزميات ML، ولوحات تفاعلية للمستخدمين.
-      </p>
+    <!-- قسم الأهداف -->
+    <section aria-labelledby="goals" class="mt-4">
+      <div class="text-center mb-4">
+        <h2 id="goals" class="section-title" data-i18n="about.goals">أهدافنا</h2>
+        <p class="muted" data-i18n="about.goalsHelper">
+          ما نسعى لتحقيقه من خلال هذه المنصة.
+        </p>
+      </div>
+      
+      <div class="grid-3">
+        <!-- هدف 1 -->
+        <div class="card glass-effect hover-scale text-center p-4">
+          <div class="icon-box purple mx-auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 12h5l3 5 5-11 4 6h3"/>
+            </svg>
+          </div>
+          <h3 class="h4" data-i18n="about.g1">توصيات ذكية</h3>
+          <p class="tiny muted" data-i18n="about.g1d">
+            تحليل دقيق يقترح عليك التخصصات والدورات الأنسب.
+          </p>
+        </div>
+        
+        <!-- هدف 2 -->
+        <div class="card glass-effect hover-scale text-center p-4">
+          <div class="icon-box green mx-auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+              <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+            </svg>
+          </div>
+          <h3 class="h4" data-i18n="about.g2">تعلم مخصص</h3>
+          <p class="tiny muted" data-i18n="about.g2d">
+            خطط تعليمية مفصلة تناسب مستواك واحتياجاتك.
+          </p>
+        </div>
+
+        <!-- هدف 3 -->
+        <div class="card glass-effect hover-scale text-center p-4">
+          <div class="icon-box blue mx-auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
+          <h3 class="h4" data-i18n="about.g3">ربط بالسوق</h3>
+          <p class="tiny muted" data-i18n="about.g3d">
+            جسور تربط مهاراتك بالمسميات الوظيفية الحقيقية.
+          </p>
+        </div>
+      </div>
     </section>
+
+    <!-- قسم النطاق (Scope) بتصميم تقني -->
+    <section aria-labelledby="scope" class="mt-4 pt-4">
+      <div class="card glass-effect p-4 border-l-brand">
+        <div class="grid-2 align-center">
+          <div>
+            <h2 id="scope" class="h3 text-gradient mb-2" data-i18n="about.scope">نطاق المشروع التقني</h2>
+            <p data-i18n="about.scopeText" class="muted mb-4">
+              تصميم قابل للتوسّع، جمع وتحليل بيانات المستخدم، دمج خوارزميات ML، ولوحات تفاعلية للمستخدمين.
+            </p>
+            
+            <!-- Tech Badges -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <span class="badge">Scalable Arch</span>
+              <span class="badge">Data Analysis</span>
+              <span class="badge">Machine Learning</span>
+              <span class="badge">Interactive UI</span>
+            </div>
+          </div>
+          
+          <!-- زخرفة بصرية -->
+          <div class="text-center mobile-hidden" style="opacity: 0.5;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="card" style="height: 40px; background: rgba(255,255,255,0.05);"></div>
+              <div class="card" style="height: 40px; background: rgba(255,255,255,0.05);"></div>
+              <div class="card" style="height: 40px; background: rgba(255,255,255,0.05); grid-column: span 2;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Footer (partial is injected by app.js) -->
+  <!-- Footer -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
+  <!-- Scripts -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
   <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/app.js"></script>
+  
+  <style>
+    /* تنسيق خاص للأيقونات في المنتصف */
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    /* تحسين النصوص الكبيرة */
+    .text-lg { font-size: 1.15rem; }
+    /* إخفاء العناصر الزخرفية في الجوال */
+    @media (max-width: 768px) { .mobile-hidden { display: none; } }
+    /* حدود ملونة للبطاقة الأخيرة */
+    .border-l-brand { border-inline-start: 4px solid var(--brand); }
+  </style>
 </body>
 </html>
