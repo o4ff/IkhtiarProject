@@ -1,140 +1,183 @@
-// auth.js - Supabase auth (no email confirmation)
+/**
+ * Auth.js - مدير المصادقة والأمان
+ * يتعامل مع تسجيل الدخول، إنشاء الحسابات، وإدارة جلسة المستخدم.
+ * مرتبط بـ Supabase ونظام الإشعارات (Toast).
+ */
+
+// دالة مساعدة للترجمة داخل هذا الملف
+function authTr(ar, en) {
+  const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+  return lang === 'ar' ? ar : (en || ar);
+}
+
 const Auth = {
-  async register(name, email, password){
-    try{
-      if(!window.supa){
-        console.error('[Auth] Supabase client is not initialized');
-        const el = document.getElementById('registerErr');
-        if(el){ el.textContent = 'خدمة Supabase غير مهيأة.'; el.style.display='block'; }
+  
+  // ----------------------------------------------------
+  // 1. إنشاء حساب جديد (Register)
+  // ----------------------------------------------------
+  async register(name, email, password) {
+    try {
+      // التحقق من تحميل مكتبة Supabase
+      if (!window.supa) {
+        console.error('[Auth] Supabase client missing.');
+        Toast.show(
+          authTr('⚠️ حدث خطأ في الاتصال بالنظام.', '⚠️ A system connection error occurred.'),
+          'error'
+        );
         return false;
       }
 
-      // signUp: إذا كان تأكيد البريد معطلاً سيتم إنشاء جلسة مباشرة
+      // أ) محاولة إنشاء المستخدم في Supabase Auth
       const { data, error } = await supa.auth.signUp({
         email,
         password,
-        options: { data: { display_name: name } }
+        options: { data: { display_name: name } } // حفظ الاسم في الميتا داتا
       });
 
-      if(error){
-        console.error('signUp error:', error);
+      // ب) التعامل مع أخطاء التسجيل
+      if (error) {
+        console.error('[Auth] SignUp Error:', error);
+        // عرض رسالة الخطأ القادمة من السيرفر أو رسالة عامة
+        let msg = authTr('تعذّر إنشاء الحساب.', 'Failed to create account.');
+        if (error.message.includes('registered')) {
+          msg = authTr('هذا البريد مسجل مسبقاً!', 'This email is already registered!');
+        }
+        if (error.message.includes('password')) {
+          msg = authTr('كلمة المرور ضعيفة.', 'Password is too weak.');
+        }
+        
+        Toast.show(msg, 'error');
+        
+        // إظهار الخطأ في النص الصغير تحت الزر إذا وجد العنصر
         const el = document.getElementById('registerErr');
-        if(el){ el.textContent = error.message || 'تعذّر إنشاء الحساب.'; el.style.display='block'; }
-        window.Toast && Toast.show(error.message || 'تعذّر إنشاء الحساب ❌', 'error', 2400);
+        if (el) { el.textContent = msg; el.style.display = 'block'; }
+        
         return false;
       }
 
-      // تحقّق سريع أن الجلسة وُجدت (قد تكون null إذا كان التأكيد مفعل وSMTP غير مهيأ)
-      const { data: { session }, error: sErr } = await supa.auth.getSession();
-      if(sErr){ console.error('getSession after signUp:', sErr); }
-      if(!session){
-        console.warn('No session after signUp (check Email confirmations / SMTP settings)');
-      }
-
-      // المستخدم قد لا يعود مباشرة في data.user إن كان التفعيل مطلوباً
-      let user = data?.user;
-      if(!user){
-        const { data: uData, error: uErr } = await supa.auth.getUser();
-        if(uErr){ console.error('getUser after signUp:', uErr); }
-        user = uData?.user || null;
-      }
-
-      // إنشاء/تحديث صف profile
-      if(user?.id){
-        const profileRow = {
+      // ج) التحقق من نجاح العملية (قد تتطلب تفعيل بريد إلكتروني حسب إعدادات Supabase)
+      const user = data?.user;
+      
+      if (user) {
+        // د) إنشاء ملف شخصي (Profile) في قاعدة البيانات فوراً
+        // هذا يضمن وجود صف للمستخدم في جدول users_profile
+        const { error: profileErr } = await supa.from('users_profile').upsert({
           user_id: user.id,
           display_name: name,
           lang: localStorage.getItem('lang') || 'ar',
           theme: document.body.getAttribute('data-theme') || 'dark'
-        };
-        const { error: upErr } = await supa
-          .from('users_profile')
-          .upsert(profileRow, { onConflict: 'user_id' });
-        if(upErr){ console.error('profile upsert error:', upErr); }
+        }, { onConflict: 'user_id' });
+
+        if (profileErr) {
+          console.warn('[Auth] Profile creation warning:', profileErr);
+          // لا نوقف العملية هنا لأن الحساب أنشئ بالفعل
+        }
+
+        return true; // نجاح كامل
       }
 
+      // إذا لم يعد هناك مستخدم (نادرة الحدوث إلا إذا كان تأكيد البريد إجباري وصارم جداً)
+      Toast.show(
+        authTr('يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.', 'Please verify your email to activate your account.'),
+        'info'
+      );
       return true;
-    }catch(e){
-      console.error('register catch:', e);
-      const el = document.getElementById('registerErr');
-      if(el){ el.textContent = 'خطأ غير متوقع أثناء إنشاء الحساب.'; el.style.display='block'; }
-      window.Toast && Toast.show('خطأ غير متوقع أثناء إنشاء الحساب ❌', 'error', 2400);
+
+    } catch (e) {
+      console.error('[Auth] Unexpected error:', e);
+      Toast.show(
+        authTr('حدث خطأ غير متوقع، حاول لاحقاً.', 'An unexpected error occurred, please try again later.'),
+        'error'
+      );
       return false;
     }
   },
 
-  async login(email, password){
-    try{
-      if(!window.supa){
-        console.error('[Auth] Supabase client is not initialized');
-        const el = document.getElementById('loginErr');
-        if(el){ el.textContent = 'خدمة Supabase غير مهيأة.'; el.style.display='block'; }
+  // ----------------------------------------------------
+  // 2. تسجيل الدخول (Login)
+  // ----------------------------------------------------
+  async login(email, password) {
+    try {
+      if (!window.supa) {
+        Toast.show(
+          authTr('⚠️ خدمة قاعدة البيانات غير متصلة.', '⚠️ Database service is not connected.'),
+          'error'
+        );
         return false;
       }
+
       const { data, error } = await supa.auth.signInWithPassword({ email, password });
-      if(error){
-        console.error('signIn error:', error);
+
+      if (error) {
+        console.error('[Auth] Login Error:', error);
+        
         const el = document.getElementById('loginErr');
-        if(el){ el.textContent = error.message || 'تعذر تسجيل الدخول، تأكد من البيانات.'; el.style.display='block'; }
-        window.Toast && Toast.show(error.message || 'فشل تسجيل الدخول ❌', 'error', 2200);
+        let msg = authTr(
+          'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+          'Email or password is incorrect.'
+        );
+        
+        Toast.show(msg, 'error');
+        if (el) { el.textContent = msg; el.style.display = 'block'; }
+        
         return false;
       }
-      return !!data.session;
-    }catch(e){
-      console.error('login catch:', e);
-      const el = document.getElementById('loginErr');
-      if(el){ el.textContent = 'خطأ غير متوقع أثناء تسجيل الدخول.'; el.style.display='block'; }
-      window.Toast && Toast.show('خطأ غير متوقع أثناء تسجيل الدخول ❌', 'error', 2200);
+
+      // التحقق من وجود جلسة
+      if (data?.session) {
+        return true;
+      }
+      return false;
+
+    } catch (e) {
+      console.error('[Auth] Login exception:', e);
+      Toast.show(
+        authTr('خطأ في الاتصال.', 'Connection error.'),
+        'error'
+      );
       return false;
     }
   },
 
-  async logout(){
-    try{
-      if(!window.supa){
-        console.error('[Auth] Supabase client is not initialized');
-        return;
+  // ----------------------------------------------------
+  // 3. تسجيل الخروج (Logout)
+  // ----------------------------------------------------
+  async logout() {
+    try {
+      if (window.supa) {
+        await supa.auth.signOut();
+        // مسح بيانات التوصيات المحلية إذا أردت (اختياري)
+        // localStorage.removeItem('ikhtiar_recs'); 
       }
-      const { error } = await supa.auth.signOut();
-      if(error){ console.error('signOut error:', error); }
-    }catch(e){
-      console.error('logout catch:', e);
+    } catch (e) {
+      console.error('[Auth] Logout error:', e);
     }
   },
 
-  async isAuthed(){
-    try{
-      if(!window.supa){
-        console.error('[Auth] Supabase client is not initialized');
-        return false;
+  // ----------------------------------------------------
+  // 4. التحقق من المستخدم الحالي (Helper)
+  // ----------------------------------------------------
+  async currentUser() {
+    try {
+      // إذا كانت الدالة معرفة في supa.js نستخدمها، وإلا نطلب مباشرة
+      if (typeof window.getSessionUser === 'function') {
+        return await window.getSessionUser();
       }
-      const { data: { session }, error } = await supa.auth.getSession();
-      if(error){ console.error('getSession error:', error); }
-      return !!session;
-    }catch(e){
-      console.error('isAuthed catch:', e);
-      return false;
-    }
-  },
-
-  async currentUser(){
-    try{
-      if(typeof getSessionUser === 'function'){
-        return await getSessionUser();
-      }
-      if(!window.supa){
-        console.error('[Auth] Supabase client is not initialized');
-        return null;
-      }
-      const { data, error } = await supa.auth.getUser();
-      if(error){ console.error('getUser error:', error); return null; }
-      return data?.user ?? null;
-    }catch(e){
-      console.error('currentUser catch:', e);
+      if (!window.supa) return null;
+      
+      const { data } = await supa.auth.getUser();
+      return data?.user || null;
+    } catch (e) {
       return null;
     }
+  },
+
+  // التحقق هل المستخدم مسجل دخول (بوليان)
+  async isAuthed() {
+    const u = await this.currentUser();
+    return !!u;
   }
 };
 
-// اجعل الكائن متاحًا على window أيضاً
+// إتاحة الكائن للنظام بأكمله
 window.Auth = Auth;
