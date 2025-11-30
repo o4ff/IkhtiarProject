@@ -448,36 +448,115 @@
       }
     }
 
-    // --- منطق لوحة التحكم (Dashboard) ---
-    if(location.pathname.endsWith('dashboard.html')) {
-      const u = await Auth.currentUser();
-      if(u){
-        const { data } = await supa.from('recommendations')
-          .select('payload').eq('user_id', u.id)
-          .order('created_at', {ascending:false}).limit(1);
-        const latestDiv = document.getElementById('latestRecs');
-        const topBadge = document.getElementById('topRecBadge');
-        
-        if(data && data[0] && latestDiv){
-          const topRec = data[0].payload[0];
-          if(topRec && topBadge) topBadge.textContent = topRec.major;
-          
-          latestDiv.innerHTML = data[0].payload.slice(0, 2).map(r => `
-            <div class="card glass-effect p-3 mb-2 border-l-brand">
-              <div class="d-flex justify-between">
-                <strong>${r.major}</strong>
-                <span class="tiny badge">${r.score}%</span>
-              </div>
-            </div>
-          `).join('');
-        } else if(latestDiv) {
-          latestDiv.innerHTML = `
-            <p class="tiny muted text-center">
-              ${trInline('لا توجد نتائج بعد.', 'No results yet.')}
-            </p>`;
-        }
+// --- منطق لوحة التحكم (Dashboard) ---
+if (location.pathname.endsWith('dashboard.html')) {
+  const u = await Auth.currentUser();
+  if (u) {
+    const latestDiv   = document.getElementById('latestRecs');
+    const topBadge    = document.getElementById('topRecBadge');
+    const profileBox  = document.getElementById('profileBox');
+
+    // 1) جلب آخر توصية (مع التاريخ)
+    let lastRecDateText = trInline('لا توجد توصيات بعد.', 'No recommendations yet.');
+
+    const { data: recRows } = await supa
+      .from('recommendations')
+      .select('payload, created_at')
+      .eq('user_id', u.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (recRows && recRows[0]) {
+      const row = recRows[0];
+
+      // أفضل توصية في البادج العلوي
+      if (row.payload && row.payload[0] && topBadge) {
+        topBadge.textContent = row.payload[0].major;
       }
+
+      // عرض آخر نتيجتين في "آخر النتائج"
+      if (latestDiv && Array.isArray(row.payload)) {
+        latestDiv.innerHTML = row.payload.slice(0, 2).map(r => `
+          <div class="card glass-effect p-3 mb-2 border-l-brand">
+            <div class="d-flex justify-between">
+              <strong>${r.major}</strong>
+              <span class="tiny badge">${r.score}%</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // تجهيز نص تاريخ آخر توصية
+      if (row.created_at) {
+        const d = new Date(row.created_at);
+        const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+        const locale = lang === 'ar' ? 'ar-SA' : 'en-US';
+        lastRecDateText = d.toLocaleDateString(locale, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      }
+    } else if (latestDiv) {
+      latestDiv.innerHTML = `
+        <p class="tiny muted text-center">
+          ${trInline('لا توجد نتائج بعد.', 'No results yet.')}
+        </p>`;
     }
+
+    // 2) جلب بيانات الملف الشخصي (الاسم) + تعبئة كرت "ملفي الشخصي"
+    if (profileBox) {
+      let displayName =
+        (u.user_metadata && u.user_metadata.display_name) || '';
+
+      try {
+        if (!displayName) {
+          const { data: prof } = await supa
+            .from('users_profile')
+            .select('display_name')
+            .eq('user_id', u.id)
+            .limit(1);
+
+          if (prof && prof[0] && prof[0].display_name) {
+            displayName = prof[0].display_name;
+          }
+        }
+      } catch (e) {
+        console.warn('[Dashboard] profile fetch warning:', e);
+      }
+
+      if (!displayName) {
+        // آخر حل: نستخدم الإيميل لو الاسم مش موجود
+        displayName = u.email || '-';
+      }
+
+      profileBox.innerHTML = `
+        <div class="profile-item">
+          <span class="profile-label">
+            ${trInline('الاسم', 'Name')}
+          </span>
+          <span class="profile-val">${displayName}</span>
+        </div>
+
+        <div class="profile-item">
+          <span class="profile-label">
+            ${trInline('الدولة', 'Country')}
+          </span>
+          <span class="profile-val">
+            ${trInline('السعودية', 'Saudi Arabia')}
+          </span>
+        </div>
+
+        <div class="profile-item">
+          <span class="profile-label">
+            ${trInline('تاريخ آخر توصية', 'Last recommendation')}
+          </span>
+          <span class="profile-val">${lastRecDateText}</span>
+        </div>
+      `;
+    }
+  }
+}
 
   }, 100);
 })();
