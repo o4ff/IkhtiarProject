@@ -3,162 +3,349 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تواصل معنا</title>
+  <title>تواصل معنا | Ikhtiar</title>
+  
+  <!-- الروابط الأساسية للتصميم -->
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
 
-  <!-- Nav (injected by app.js) -->
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow blue"></div>
+  <div class="ambient-glow purple" style="bottom: -10%; left: 20%;"></div>
+
+  <!-- الناف بار -->
   <div data-include="partials/nav"></div>
 
-  <main class="container narrow" role="main">
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
+  <main class="container narrow fade-in" role="main">
+    
+    <!-- زر الرجوع -->
+    <div class="mb-2">
+      <button class="btn ghost icon" id="backBtn" type="button">
+        <span style="font-size: 1.2rem;">←</span> <span data-i18n="ui.back">رجوع</span>
       </button>
-    </nav>
+    </div>
 
-    <header>
-      <h1 data-i18n="contact.title">تواصل معنا</h1>
-      <p class="muted tiny" data-i18n="contact.helper">نرد عادة خلال 24 ساعة.</p>
+    <!-- الترويسة -->
+    <header class="text-center mb-4">
+      <!-- نستخدم contact.helper عشان تتترجم في الشريط العلوي -->
+      <div class="badge glow mb-2" data-i18n="contact.helper">
+        نحن هنا للمساعدة
+      </div>
+      <h1 class="section-title">
+        <span data-i18n="contact.title">تواصل معنا</span>
+      </h1>
+      <!-- استخدمنا footer.tag كنص وصفي (مترجم جاهز) -->
+      <p class="muted narrow-text" style="margin: 0 auto;" data-i18n="footer.tag">
+        لديك استفسار أو اقتراح؟ فريقنا جاهز للرد عليك ومساعدتك في رحلتك التعليمية.
+      </p>
     </header>
 
-    <form id="contactForm" class="form card" novalidate>
-      <label>
-        <span data-i18n="contact.name">الاسم</span>
-        <input type="text" name="name" required autocomplete="name" />
-      </label>
-      <label>
-        <span data-i18n="contact.email">البريد الإلكتروني</span>
-        <input type="email" name="email" required autocomplete="email" />
-      </label>
-      <label>
-        <span data-i18n="contact.msg">الرسالة</span>
-        <textarea name="message" rows="5" required></textarea>
-      </label>
-      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
-        <button id="contactSubmit" class="btn primary" type="submit" data-i18n="contact.send">إرسال</button>
+    <!-- نموذج التواصل الزجاجي -->
+    <div class="card glass-effect p-4 relative overflow-hidden">
+      <!-- زخرفة خلفية خفيفة -->
+      <div class="ambient-glow green" style="width: 200px; height: 200px; top: -50px; right: -50px; opacity: 0.1;"></div>
+
+      <form id="contactForm" class="stack" novalidate>
+        <div class="grid-2 mobile-stack">
+          <div>
+            <label class="input-label">
+              <span class="icon">👤</span>
+              <span data-i18n="contact.name">الاسم</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="الاسم الكريم..."
+            />
+          </div>
+          <div>
+            <label class="input-label">
+              <span class="icon">📧</span>
+              <span data-i18n="contact.email">البريد الإلكتروني</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="example@email.com"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="input-label">
+            <span class="icon">💬</span>
+            <span data-i18n="contact.msg">الرسالة</span>
+          </label>
+          <textarea
+            name="message"
+            rows="5"
+            required
+            placeholder="كيف يمكننا مساعدتك اليوم؟..."
+          ></textarea>
+        </div>
+
+        <div class="mt-2 text-center">
+          <button id="contactSubmit" class="btn primary glow-btn w-full big-btn" type="submit">
+            <span data-i18n="contact.send">إرسال الرسالة</span>
+            <span class="icon-arrow">✈️</span>
+          </button>
+        </div>
+
+        <!-- رسائل الحالة -->
+        <div
+          id="contactErr"
+          class="card mt-2 p-2 text-center"
+          style="display:none; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--err); color: #ff8090;"
+        ></div>
+        <div
+          id="contactOk"
+          class="card mt-2 p-2 text-center"
+          style="display:none; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--ok); color: var(--ok);"
+        ></div>
+      </form>
+    </div>
+
+    <!-- قسم فريق العمل -->
+    <section class="mt-4 pt-4 fade-in" style="animation-delay: 0.2s;">
+      <div class="text-center mb-4">
+        <h2 class="h2 text-gradient" data-i18n="contact.team">فريق النجاح</h2>
+        <!-- استخدمنا footer.tag هنا أيضاً عشان يكون مترجم -->
+        <p class="muted" data-i18n="footer.tag">الأبطال خلف منصة اختيار</p>
       </div>
-      <p id="contactErr" class="tiny" style="color:var(--err);display:none"></p>
-      <p id="contactOk" class="tiny" style="color:var(--ok);display:none"></p>
-    </form>
+      
+      <div class="grid-3 small-gap">
+        <!-- عضو 1 -->
+        <div class="card glass-effect hover-scale text-center p-3 member-card">
+          <div class="avatar-circle">ع</div>
+          <h3 class="h4 mb-1" data-i18n="contact.member1">عبدالمجيد الحازمي</h3>
+          <a href="mailto:202301632@stu.jazanu.edu.sa" class="tiny muted link-hover">202301632@stu...</a>
+        </div>
+        <!-- عضو 2 -->
+        <div class="card glass-effect hover-scale text-center p-3 member-card">
+          <div class="avatar-circle">س</div>
+          <h3 class="h4 mb-1" data-i18n="contact.member2">سعود كليبي</h3>
+          <a href="mailto:202204587@stu.jazanu.edu.sa" class="tiny muted link-hover">202204587@stu...</a>
+        </div>
+        <!-- عضو 3 -->
+        <div class="card glass-effect hover-scale text-center p-3 member-card">
+          <div class="avatar-circle">ع</div>
+          <h3 class="h4 mb-1" data-i18n="contact.member3">علي زنقوطي</h3>
+          <a href="mailto:202200887@stu.jazanu.edu.sa" class="tiny muted link-hover">202200887@stu...</a>
+        </div>
+        <!-- عضو 4 -->
+        <div class="card glass-effect hover-scale text-center p-3 member-card">
+          <div class="avatar-circle">ع</div>
+          <h3 class="h4 mb-1" data-i18n="contact.member4">علي آل عقيل</h3>
+          <a href="mailto:202300020@stu.jazanu.edu.sa" class="tiny muted link-hover">202300020@stu...</a>
+        </div>
+        <!-- عضو 5 -->
+        <div class="card glass-effect hover-scale text-center p-3 member-card">
+          <div class="avatar-circle">م</div>
+          <h3 class="h4 mb-1" data-i18n="contact.member5">مهند عتيني</h3>
+          <a href="mailto:202102233@stu.jazanu.edu.sa" class="tiny muted link-hover">202102233@stu...</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- فريق الدعم -->
-  <section class="container narrow" style="margin-top:24px">
-    <h2 data-i18n="contact.team" style="margin-bottom:16px;">فريق الدعم</h2>
-    <div class="grid-3" style="gap:16px;">
-      <div class="card" style="padding:16px; text-align:center;">
-        <h3 data-i18n="contact.member1">عبدالمجيد الحازمي</h3>
-        <a href="mailto:202301632@stu.jazanu.edu.sa">202301632@stu.jazanu.edu.sa</a>
-      </div>
-      <div class="card" style="padding:16px; text-align:center;">
-        <h3 data-i18n="contact.member2">سعود كليبي</h3>
-        <a href="mailto:202204587@stu.jazanu.edu.sa">202204587@stu.jazanu.edu.sa</a>
-      </div>
-      <div class="card" style="padding:16px; text-align:center;">
-        <h3 data-i18n="contact.member3">علي زنقوطي</h3>
-        <a href="mailto:202200887@stu.jazanu.edu.sa">202200887@stu.jazanu.edu.sa</a>
-      </div>
-      <div class="card" style="padding:16px; text-align:center;">
-        <h3 data-i18n="contact.member4">علي آل عقيل</h3>
-        <a href="mailto:202300020@stu.jazanu.edu.sa">202300020@stu.jazanu.edu.sa</a>
-      </div>
-      <div class="card" style="padding:16px; text-align:center;">
-        <h3 data-i18n="contact.member5">مهند عتيني</h3>
-        <a href="mailto:202102233@stu.jazanu.edu.sa">202102233@stu.jazanu.edu.sa</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer (injected by app.js) -->
+  <!-- Footer -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
+  <!-- Scripts -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
-  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/dataService.js"></script>
   <script src="assets/js/app.js"></script>
 
-  <!-- Contact submit -->
+  <!-- Contact Logic Inline (ثنائي اللغة بدون مفاتيح جديدة) -->
   <script>
   (function(){
-    document.addEventListener('DOMContentLoaded', ()=>{
+    document.addEventListener('DOMContentLoaded', ()=> {
+      const lang = (localStorage.getItem('lang') || 'ar').toLowerCase();
+      const t = (ar, en) => (lang === 'ar' ? ar : (en || ar));
+
+      // تحديث عنوان الصفحة حسب اللغة
+      document.title = lang === 'ar'
+        ? 'تواصل معنا | Ikhtiar'
+        : 'Contact Us | Ikhtiar';
+
       const form = document.getElementById('contactForm');
       const err  = document.getElementById('contactErr');
       const ok   = document.getElementById('contactOk');
       const btn  = document.getElementById('contactSubmit');
-      if(!form) return;
+      if (!form) return;
+
+      // تحديث الـ placeholders حسب اللغة (بدون i18n keys جديدة)
+      const nameInput = form.querySelector('input[name="name"]');
+      const emailInput = form.querySelector('input[name="email"]');
+      const msgTextarea = form.querySelector('textarea[name="message"]');
+
+      if (nameInput) {
+        nameInput.placeholder = t('الاسم الكريم...', 'Your full name...');
+      }
+      if (emailInput) {
+        emailInput.placeholder = t('example@email.com', 'example@email.com');
+      }
+      if (msgTextarea) {
+        msgTextarea.placeholder = t(
+          'كيف يمكننا مساعدتك اليوم؟...',
+          'How can we help you today?...'
+        );
+      }
 
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      async function submitToDb({name,email,msg}){
-        if(!window.supa) { return { ok:false, message:'خدمة Supabase غير مهيأة.' }; }
-        try{
+      async function submitToDb({name, email, msg}) {
+        if (!window.supa) {
+          return {
+            ok: false,
+            message: t(
+              '⚠️ خدمة قاعدة البيانات غير متصلة.',
+              '⚠️ Database service is not connected.'
+            )
+          };
+        }
+        try {
           const { error } = await supa.from('contact_messages').insert({ name, email, message: msg });
-          if(error) return { ok:false, message: error.message || 'تعذّر إرسال الرسالة حالياً.' };
-          return { ok:true };
-        }catch(ex){
+          if (error) {
+            return {
+              ok: false,
+              message: error.message || t(
+                'تعذّر الإرسال، حاول لاحقاً.',
+                'Failed to send, please try again later.'
+              )
+            };
+          }
+          return { ok: true };
+        } catch (ex) {
           console.error(ex);
-          return { ok:false, message:'خطأ غير متوقع أثناء الإرسال.' };
+          return {
+            ok: false,
+            message: t('حدث خطأ غير متوقع.', 'An unexpected error occurred.')
+          };
         }
       }
 
-      function throttleOk(){
+      function throttleOk() {
         const now = Date.now();
         const last = Number(localStorage.getItem('contact_last_ts') || 0);
-        if(now - last < 30_000) return false; // 30s
+        if (now - last < 30_000) return false;
         localStorage.setItem('contact_last_ts', String(now));
         return true;
       }
 
-      form.addEventListener('submit', async (e)=>{
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        err.style.display='none'; ok.style.display='none';
-        if(btn) btn.disabled = true;
+        err.style.display = 'none';
+        ok.style.display  = 'none';
+
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = t('جاري الإرسال... ⏳', 'Sending... ⏳');
+        }
 
         const fd = new FormData(form);
-        const name  = (fd.get('name')||'').trim();
-        const email = (fd.get('email')||'').trim();
-        const msg   = (fd.get('message')||'').trim();
+        const name  = (fd.get('name') || '').trim();
+        const email = (fd.get('email') || '').trim();
+        const msg   = (fd.get('message') || '').trim();
 
-        if(!name || !email || !msg){
-          err.textContent = 'الرجاء تعبئة جميع الحقول.';
-          err.style.display='block';
-          if(btn) btn.disabled = false;
+        if (!name || !email || !msg) {
+          err.textContent = t(
+            '⚠️ الرجاء تعبئة جميع الحقول.',
+            '⚠️ Please fill in all fields.'
+          );
+          err.style.display = 'block';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>' + t('إرسال الرسالة', 'Send Message') + '</span><span class="icon-arrow">✈️</span>';
+          }
           return;
         }
-        if(!emailRe.test(email)){
-          err.textContent = 'صيغة البريد غير صحيحة.';
-          err.style.display='block';
-          if(btn) btn.disabled = false;
+
+        if (!emailRe.test(email)) {
+          err.textContent = t(
+            '⚠️ صيغة البريد الإلكتروني غير صحيحة.',
+            '⚠️ Invalid email format.'
+          );
+          err.style.display = 'block';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>' + t('إرسال الرسالة', 'Send Message') + '</span><span class="icon-arrow">✈️</span>';
+          }
           return;
         }
-        if(!throttleOk()){
-          err.textContent = 'الرجاء الانتظار قبل الإرسال مرة أخرى.';
-          err.style.display='block';
-          if(btn) btn.disabled = false;
+
+        if (!throttleOk()) {
+          err.textContent = t(
+            '⏳ يرجى الانتظار قليلاً قبل المحاولة مرة أخرى.',
+            '⏳ Please wait a bit before trying again.'
+          );
+          err.style.display = 'block';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>' + t('إرسال الرسالة', 'Send Message') + '</span><span class="icon-arrow">✈️</span>';
+          }
           return;
         }
 
         const res = await submitToDb({ name, email, msg });
-        if(!res.ok){
-          err.textContent = res.message || 'تعذّر إرسال الرسالة حالياً.';
-          err.style.display='block';
-          if(btn) btn.disabled = false;
+        if (!res.ok) {
+          err.textContent = res.message;
+          err.style.display = 'block';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>' + t('إرسال الرسالة', 'Send Message') + '</span><span class="icon-arrow">✈️</span>';
+          }
           return;
         }
 
-        ok.textContent='تم استلام رسالتك، سنعاودك قريباً.';
-        ok.style.display='block';
+        ok.textContent = t(
+          '✅ تم استلام رسالتك بنجاح! سنتواصل معك قريباً.',
+          '✅ Your message has been received! We will contact you soon.'
+        );
+        ok.style.display = 'block';
         form.reset();
-        if(btn) btn.disabled = false;
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>' + t('إرسال الرسالة', 'Send Message') + '</span><span class="icon-arrow">✈️</span>';
+        }
       });
     });
   })();
   </script>
+
+  <!-- CSS خاص لصفحة التواصل لتحسين شكل الأعضاء -->
+  <style>
+    .avatar-circle {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 auto 12px;
+      box-shadow: 0 5px 15px var(--brand-glow);
+    }
+    .member-card { transition: 0.3s; }
+    .member-card:hover .avatar-circle { transform: scale(1.1); }
+    .link-hover:hover { color: var(--brand); text-decoration: underline; }
+    .grid-3.small-gap { gap: 16px; }
+  </style>
 </body>
 </html>
