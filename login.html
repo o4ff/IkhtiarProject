@@ -3,55 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>تسجيل الدخول</title>
+  <title data-i18n="title.login">تسجيل الدخول | Ikhtiar</title>
+  
+  <!-- روابط التصميم -->
   <link rel="stylesheet" href="assets/css/theme.css" />
   <link rel="stylesheet" href="assets/css/util.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
-  <!-- Nav (partial) -->
+
+  <!-- الخلفية الحية -->
+  <div class="ambient-glow purple" style="top: -20%; left: -10%;"></div>
+  <div class="ambient-glow blue" style="bottom: -20%; right: -10%;"></div>
+
+  <!-- الناف بار -->
   <div data-include="partials/nav"></div>
 
-  <main class="container narrow" role="main">
-    <!-- Back button -->
-    <nav class="subnav" aria-label="Secondary">
-      <button class="btn outline icon" id="backBtn" type="button" aria-label="Back">
-        ← <span data-i18n="ui.back">رجوع</span>
-      </button>
-    </nav>
+  <!-- المحتوى الرئيسي: توسيط عمودي وأفقي -->
+  <main class="container narrow fade-in" role="main" style="min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+    
+    <!-- بطاقة الدخول الزجاجية -->
+    <div class="card glass-effect p-4 w-full relative overflow-hidden" style="max-width: 450px;">
+      
+      <!-- دائرة زخرفية خلفية -->
+      <div class="ambient-glow green" style="width: 150px; height: 150px; top: -50px; right: -50px; opacity: 0.15;"></div>
 
-    <h1 data-i18n="auth.loginTitle">تسجيل الدخول</h1>
-
-    <form id="loginForm" class="form card" novalidate>
-      <label>
-        <span data-i18n="auth.email">البريد الإلكتروني</span>
-        <input type="email" name="email" required autocomplete="username" />
-      </label>
-      <label>
-        <span data-i18n="auth.password">كلمة المرور</span>
-        <input type="password" name="password" required autocomplete="current-password" />
-      </label>
-
-      <div class="form-actions" style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn primary" type="submit" data-i18n="auth.login">دخول</button>
+      <!-- رأس البطاقة -->
+      <div class="text-center mb-4">
+        <div class="icon-box purple mx-auto mb-2" style="width: 60px; height: 60px; font-size: 1.5rem; border-radius: 50%;">🔐</div>
+        <h1 class="h2 mb-1" data-i18n="auth.loginTitle">تسجيل الدخول</h1>
+        <p class="muted tiny" data-i18n="auth.loginSub">مرحباً بعودتك! أكمل رحلتك نحو المستقبل.</p>
       </div>
 
-      <p id="loginErr" class="tiny" style="color:var(--err);display:none"></p>
-      <p class="muted">
-        <span data-i18n="auth.noAccount">لا تملك حساباً؟</span>
-        <a href="register.html" data-i18n="auth.registerLink">إنشاء حساب</a>
-      </p>
-    </form>
+      <!-- النموذج -->
+      <form id="loginForm" class="stack" novalidate>
+        
+        <!-- حقل البريد -->
+        <div>
+          <label class="input-label">
+            <span class="icon">📧</span>
+            <span data-i18n="auth.email">البريد الإلكتروني</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            autocomplete="username"
+            placeholder="name@example.com"
+            data-i18n="auth.emailPlaceholder"
+          />
+        </div>
+        
+        <!-- حقل كلمة المرور -->
+        <div>
+          <label class="input-label">
+            <span class="icon">🔑</span>
+            <span data-i18n="auth.password">كلمة المرور</span>
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            autocomplete="current-password"
+            placeholder="••••••••"
+            data-i18n="auth.passwordPlaceholder"
+          />
+        </div>
+
+        <!-- زر الدخول -->
+        <div class="mt-2">
+          <button class="btn primary glow-btn w-full" type="submit">
+            <span data-i18n="auth.login">دخول</span>
+            <span class="icon-arrow">➜</span>
+          </button>
+        </div>
+
+        <!-- منطقة الخطأ (مخفية افتراضياً) -->
+        <p
+          id="loginErr"
+          class="tiny text-center mt-2 p-2 rounded"
+          style="color: #ff8090; background: rgba(255, 68, 68, 0.1); display:none; border: 1px solid var(--err);"
+        ></p>
+
+        <!-- رابط التسجيل -->
+        <div class="text-center mt-3 pt-3 border-t">
+          <p class="muted tiny">
+            <span data-i18n="auth.noAccount">لا تملك حساباً؟</span>
+            <a href="register.html" class="text-gradient font-bold hover-underline" data-i18n="auth.registerLink">إنشاء حساب جديد</a>
+          </p>
+        </div>
+      </form>
+    </div>
   </main>
 
-  <!-- Footer (partial) -->
+  <!-- التذييل -->
   <div data-include="partials/footer"></div>
 
-  <!-- Scripts order -->
+  <!-- السكربتات -->
   <script src="assets/js/i18n.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supa.js"></script>
   <script src="assets/js/dataService.js"></script>
   <script src="assets/js/auth.js"></script>
   <script src="assets/js/app.js"></script>
+  
+  <!-- تنسيقات إضافية بسيطة -->
+  <style>
+    .border-t { border-top: 1px solid var(--border); }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .hover-underline:hover { text-decoration: underline; }
+    .rounded { border-radius: 8px; }
+  </style>
 </body>
 </html>
